@@ -17,7 +17,7 @@
 EXE = ./SketchBasedAnimation
 SOURCES = ./src/main.cpp
 SOURCES += ../depends/imgui_impl_glfw.cpp ../imgui_impl_opengl3.cpp
-# SOURCES += ./src/utils.cpp 
+SOURCES += ./src/utils.cpp 
 SOURCES += ../../depends/imgui.cpp ../../depends/imgui_demo.cpp ../../depends/imgui_draw.cpp ../../depends/imgui_widgets.cpp
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
