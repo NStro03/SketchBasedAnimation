@@ -32,14 +32,29 @@ using namespace gl;
 #include <vector>
 #include <array>
 
-static void cursorPositionCallback(GLFWwindow *canvas, double xPos, double yPos);
-void cursorOnCanvasCallback(GLFWwindow *canvas, int entered);
-bool insideCanvas = false;
-void mouseButtonCallback(GLFWwindow *canvas, int button, int action, int mods);
+struct Object
+{
+    std::vector<ImVec2> currObjectPoints;
+    int size;
+    int Objectid;
+    Object(int i) 
+    { 
+        size = 0;
+        Objectid = i;
+    }
+};
+// static void cursorPositionCallback(GLFWwindow *canvas, double xPos, double yPos);
+// void cursorOnCanvasCallback(GLFWwindow *canvas, int entered);
+// bool insideCanvas = false;
+// void mouseButtonCallback(GLFWwindow *canvas, int button, int action, int mods);
 bool leftMouseDown = false;
 
 std::vector<ImVec2> currObjectPoints;
 int size = 0;
+
+std::vector<Object> Objects;
+static int Objectcount=-1;
+
 double x,y;
 void draw(GLFWwindow *canvas){
     // glfwSetCursorPosCallback(canvas, cursorPositionCallback);
@@ -51,10 +66,12 @@ void draw(GLFWwindow *canvas){
     // printf("%s\n", leftMouseDown ? "true" : "false");
     if(leftMouseDown){
         ImVec2 s(x,y);
-        currObjectPoints.push_back(s);
-        size++;
+        Objects[Objectcount].currObjectPoints.push_back(s);
+        //size++;
+        Objects[Objectcount].size++;
     }
 }
+
 
 // static void cursorPositionCallback(GLFWwindow *canvas, double xPos, double yPos){
    

@@ -161,7 +161,12 @@ int main(int, char**)
             // static ImVec2 points[] = { { 100, 120 }, { 140, 800 }, { 50, 50 } };
             // printf("%s\n", leftMouseDown ? "true" : "false");
             ImDrawList* draw_list = ImGui::GetWindowDrawList();
-            draw_list->AddPolyline(&currObjectPoints[0],size, 0xFF00FFFF, false, 3.0f);
+            int i = 0;
+            for(i=0;i<Objects.size();i++){
+                std::vector<ImVec2> points = Objects[Objectcount].currObjectPoints;
+                printf("%d %d\n",i,Objects[Objectcount].size);
+                draw_list->AddPolyline(&points[0],Objects[Objectcount].size, 0xFF00FFFF, false, 3.0f);
+            }
 
             // ImGui::GetWindowDrawList()->AddCallback(draw_callback, NULL);
 
@@ -246,7 +251,18 @@ int main(int, char**)
         if(ImGui::GetIO().MouseDown[0]){
         	// std::cout << "Location "<< io.MousePos.x << " "
         	// 		<<" " << io.MousePos.y << " " << std::endl  ;
-            leftMouseDown = true;
+            if(io.MousePos.x>0 && io.MousePos.x<960 && io.MousePos.y>0 && io.MousePos.y<720){
+                if(!leftMouseDown){
+                    printf("%d %d\n", Objects.size(), Objectcount);
+                    Objectcount++;
+                    Object o(Objects.size());
+                    Objects.push_back(o);
+                }
+                leftMouseDown = true;
+            }
+            else{
+                leftMouseDown = false;
+            }
         }
         else{
             leftMouseDown = false;
