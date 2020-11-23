@@ -3,6 +3,7 @@
 #include "imgui_impl_opengl3.h"
 #include <stdio.h>
 #include <iostream>
+#include <vector>
 // About Desktop OpenGL function loaders:
 //  Modern desktop OpenGL doesn't have a standard portable header file to load OpenGL function pointers.
 //  Helper libraries are often used for this purpose! Here we are supporting a few common ones (gl3w, glew, glad).
@@ -29,4 +30,39 @@ using namespace gl;
 #include IMGUI_IMPL_OPENGL_LOADER_CUSTOM
 #endif
 
-static void draw_callback(const ImDrawList* parent_list, const ImDrawCmd* cmd);
+int pixelObjectMap[961][721];
+int selected = 0, hovered = 0;
+static int getObjectid(int x, int y){
+	int i = x-1, s=0,j=y-1;
+	for(;i<=x+1;i++){
+		for(;j<=y+1;j++)
+			if(pixelObjectMap[i][j]>s)
+				s=pixelObjectMap[i][j];
+	}
+    return s;
+}
+static void selectCurve(ImGuiIO io)
+{
+    int x,y;
+    if(ImGui::GetIO().MouseClicked[0]){
+        ImVec2 distFromClick(io.MouseClickedPos[0]);
+        x = (int)(distFromClick.x);
+        y = (int)(distFromClick.y);
+        if(x>0 && x<960 && y>0 && y<720){
+        	// printf("%d %d\n", x, y);
+        	int objid = getObjectid(x,y);
+        	if(objid!=0){
+            	selected = objid;
+        	}
+    	}
+    }
+    x = (int)(io.MousePos.x);
+    y = (int)(io.MousePos.y);
+    hovered = 0;
+    if(x>0 && x<960 && y>0 && y<720){
+    	int objid = getObjectid(x,y);
+    	if(objid!=0){
+        	hovered = objid;
+    	}
+	}
+}

@@ -1,8 +1,6 @@
 // dear imgui: standalone example application for GLFW + OpenGL 3, using programmable pipeline
 // If you are new to dear imgui, see examples/README.txt and documentation at the top of imgui.cpp.
 // (GLFW is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan/Metal graphics context creation, etc.)
-
-#include "utils.h"
 #include "Draw.h"
 // Include glfw3.h after our OpenGL definitions
 #include <GLFW/glfw3.h>
@@ -115,6 +113,9 @@ int main(int, char**)
     ImVec2 sheetsize = ImVec2(960,720);
     ImVec2 sheetpos = ImVec2(0,0);
     static int choice = 1;
+    const ImU32 MarkerCol32 = ImColor(marker_color);
+    const ImU32 SelectCol32 = ImColor(ImVec4(1.0f, 0.1875f, 0.0625f, 1.00f));
+    const ImU32 HoverCol32 = ImColor(ImVec4(1.0f, 1.0f, 0.0f, 1.00f));
     // Main loop
 
 
@@ -165,7 +166,15 @@ int main(int, char**)
             for(i=0;i<PlObjects.size();i++){
                 // std::vector<ImVec2> points = PlObjects[ObjectCount].getPoints();
                 //printf("%d %d\n",i,Objects[i].size);
-                draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), 0xFF3011FF, false, 3.0f);
+                if(selected==i+1){
+                    draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), SelectCol32, false, 3.0f);
+                }
+                else if(hovered==i+1){
+                    draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), HoverCol32, false, 3.0f);
+                }
+                else{
+                    draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), MarkerCol32, false, 3.0f);
+                }
             }
 
             // ImGui::GetWindowDrawList()->AddCallback(draw_callback, NULL);
@@ -183,8 +192,6 @@ int main(int, char**)
             // ImGui::Text("counter = %d", counter);
 
             // ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            
-            draw(window);
             
             ImGui::End();
             ImGui::PopStyleColor();
@@ -211,17 +218,19 @@ int main(int, char**)
 
             if (ImGui::Button("Draw")){
                 choice = 1;
+                selected = 0;
+                hovered = 0;
             }
             ImGui::SameLine();
             if(ImGui::Button("Select")){
                 choice = 2;
             }
-            // if(choice==1){
-            //     ImGui::Text("Draw");
-            // }
-            // else{
-            //     ImGui::Text("Select");
-            // }
+            if(choice==1){
+                draw(window);
+            }
+            else{
+                selectCurve(io);
+            }
 
             // ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
             // ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
