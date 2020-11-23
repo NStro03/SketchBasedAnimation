@@ -163,9 +163,9 @@ int main(int, char**)
             ImDrawList* draw_list = ImGui::GetWindowDrawList();
             int i = 0;
             for(i=0;i<PlObjects.size();i++){
-                std::vector<ImVec2> points = PlObjects[ObjectCount].getPoints();
-                //printf("%d %d\n",i,Objects[Objectcount].size);
-                draw_list->AddPolyline(&points[0],PlObjects[ObjectCount].getSize(), 0xFF3011FF, false, 3.0f);
+                // std::vector<ImVec2> points = PlObjects[ObjectCount].getPoints();
+                //printf("%d %d\n",i,Objects[i].size);
+                draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), 0xFF3011FF, false, 3.0f);
             }
 
             // ImGui::GetWindowDrawList()->AddCallback(draw_callback, NULL);

@@ -52,8 +52,8 @@ public:
         size++;
     }
     
-    std::vector<ImVec2> getPoints(){
-        return objectPoints;
+    ImVec2* getPoints(){
+        return &objectPoints[0];
     }
 
     int getSize(){
@@ -112,8 +112,8 @@ void setleftmouseDown(ImGuiIO io){
                 //printf("%d %d\n", Objects.size(), Objectcount);
                 // ObjectCount++;
                 
-                PlObject o;
-                PlObjects.push_back(o);
+                //PlObject o;
+                PlObjects.push_back(PlObject());
             }
             prevX = io.MousePos.x;
             prevY = io.MousePos.y;
