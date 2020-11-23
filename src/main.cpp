@@ -3,7 +3,7 @@
 // (GLFW is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan/Metal graphics context creation, etc.)
 
 #include "utils.h"
-
+#include "Draw.h"
 // Include glfw3.h after our OpenGL definitions
 #include <GLFW/glfw3.h>
 
@@ -73,8 +73,6 @@ int main(int, char**)
         fprintf(stderr, "Failed to initialize OpenGL loader!\n");
         return 1;
     }
-
-#include "Draw.h"
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -160,6 +158,10 @@ int main(int, char**)
 
             ImGui::SetWindowPos(sheetpos);
             ImGui::SetWindowSize(sheetsize);
+            // static ImVec2 points[] = { { 100, 120 }, { 140, 800 }, { 50, 50 } };
+            // printf("%s\n", leftMouseDown ? "true" : "false");
+            ImDrawList* draw_list = ImGui::GetWindowDrawList();
+            draw_list->AddPolyline(&currObjectPoints[0],size, 0xFF00FFFF, false, 3.0f);
 
             // ImGui::GetWindowDrawList()->AddCallback(draw_callback, NULL);
 
@@ -241,9 +243,14 @@ int main(int, char**)
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        if(ImGui::GetIO().MouseClicked[1])
-        	std::cout << "Location "<< io.MousePos.x << " "
-        			<<" " << io.MousePos.y << " " << std::endl  ;
+        if(ImGui::GetIO().MouseDown[0]){
+        	// std::cout << "Location "<< io.MousePos.x << " "
+        	// 		<<" " << io.MousePos.y << " " << std::endl  ;
+            leftMouseDown = true;
+        }
+        else{
+            leftMouseDown = false;
+        }
         glfwSwapBuffers(window);
     
     }

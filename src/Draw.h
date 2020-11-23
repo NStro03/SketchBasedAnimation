@@ -38,44 +38,47 @@ bool insideCanvas = false;
 void mouseButtonCallback(GLFWwindow *canvas, int button, int action, int mods);
 bool leftMouseDown = false;
 
-vector<ImVec2> currObjectPoints = [];
+std::vector<ImVec2> currObjectPoints;
+int size = 0;
+double x,y;
 void draw(GLFWwindow *canvas){
-    glfwSetCursorPosCallback(canvas, cursorPositionCallback);
-    glfwSetInputMode(canvas, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    glfwSetCursorEnterCallback(canvas, cursorOnCanvasCallback);
-    glfwSetMouseButtonCallback(canvas, mouseButtonCallback);
-    glfwSetInputMode(canvas, GLFW_STICKY_MOUSE_BUTTONS, 1);     // To make sure that a mouse eent is always detected. Done by glfw by setting and resetting flags.
-    vector<
+    // glfwSetCursorPosCallback(canvas, cursorPositionCallback);
+    // glfwSetInputMode(canvas, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    // glfwSetCursorEnterCallback(canvas, cursorOnCanvasCallback);
+    // glfwSetMouseButtonCallback(canvas, mouseButtonCallback);
+    // glfwSetInputMode(canvas, GLFW_STICKY_MOUSE_BUTTONS, 1);     // To make sure that a mouse eent is always detected. Done by glfw by setting and resetting flags.
+    glfwGetCursorPos(canvas, &x, &y);
+    // printf("%s\n", leftMouseDown ? "true" : "false");
     if(leftMouseDown){
-
+        ImVec2 s(x,y);
+        currObjectPoints.push_back(s);
+        size++;
     }
 }
 
-static void cursorPositionCallback(GLFWwindow *canvas, double xPos, double yPos){
-    if(insideCanvas)
-    std::cout<<"X: "<< xPos << "Y: "<< yPos<< std::endl;
-}
+// static void cursorPositionCallback(GLFWwindow *canvas, double xPos, double yPos){
+   
+// }
 
-void cursorOnCanvasCallback(GLFWwindow *canvas, int entered){
-    if(entered)
-        insideCanvas = true;
-    else
-        insideCanvas = false;
+// void cursorOnCanvasCallback(GLFWwindow *canvas, int entered){
+//     if(entered)
+//         insideCanvas = true;
+//     else
+//         insideCanvas = false;
     
-}
+// }
 
-void mouseButtonCallback(GLFWwindow *canvas, int button, int action, int mods){
-    if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
-        leftMouseDown = true;
-        double x,y;
-        glfwGetCursorPos(canvas, &x, &y);
-        std::cout<<"Leftdown x: "<< x <<" , y: " << y << std::endl;
-    }
+// void mouseButtonCallback(GLFWwindow *canvas, int button, int action, int mods){
+//     if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
+//         leftMouseDown = true;
+        
+//         glfwGetCursorPos(canvas, &x, &y);
+//         std::cout<<"Leftdown x: "<< x <<" , y: " << y << std::endl;
+//     }
 
-    if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE){
-        double x,y;
-        glfwGetCursorPos(canvas, &x, &y);
-        std::cout<<"LeftUp x: "<< x <<" , y: " << y << std::endl;
-        leftMouseDown = false;
-    }
-}
+//     if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE){
+//         glfwGetCursorPos(canvas, &x, &y);
+//         std::cout<<"LeftUp x: "<< x <<" , y: " << y << std::endl;
+//         leftMouseDown = false;
+//     }
+// }
