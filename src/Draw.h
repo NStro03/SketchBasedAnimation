@@ -71,6 +71,28 @@ void draw(GLFWwindow *canvas){
         Objects[Objectcount].size++;
     }
 }
+void setleftmouseDown(ImGuiIO io){
+    if(ImGui::GetIO().MouseDown[0]){
+        // std::cout << "Location "<< io.MousePos.x << " "
+        //      <<" " << io.MousePos.y << " " << std::endl  ;
+        if(io.MousePos.x>0 && io.MousePos.x<960 && io.MousePos.y>0 && io.MousePos.y<720){
+            if(!leftMouseDown){
+                //printf("%d %d\n", Objects.size(), Objectcount);
+                Objectcount++;
+                
+                Object o(Objectcount);
+                Objects.push_back(o);
+            }
+            leftMouseDown = true;
+        }
+        else{
+            leftMouseDown = false;
+        }
+    }
+    else{
+        leftMouseDown = false;
+    }
+}
 
 
 // static void cursorPositionCallback(GLFWwindow *canvas, double xPos, double yPos){

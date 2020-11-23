@@ -164,7 +164,7 @@ int main(int, char**)
             int i = 0;
             for(i=0;i<Objects.size();i++){
                 std::vector<ImVec2> points = Objects[Objectcount].currObjectPoints;
-                printf("%d %d\n",i,Objects[Objectcount].size);
+                //printf("%d %d\n",i,Objects[Objectcount].size);
                 draw_list->AddPolyline(&points[0],Objects[Objectcount].size, 0xFF00FFFF, false, 3.0f);
             }
 
@@ -248,25 +248,7 @@ int main(int, char**)
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        if(ImGui::GetIO().MouseDown[0]){
-        	// std::cout << "Location "<< io.MousePos.x << " "
-        	// 		<<" " << io.MousePos.y << " " << std::endl  ;
-            if(io.MousePos.x>0 && io.MousePos.x<960 && io.MousePos.y>0 && io.MousePos.y<720){
-                if(!leftMouseDown){
-                    printf("%d %d\n", Objects.size(), Objectcount);
-                    Objectcount++;
-                    Object o(Objects.size());
-                    Objects.push_back(o);
-                }
-                leftMouseDown = true;
-            }
-            else{
-                leftMouseDown = false;
-            }
-        }
-        else{
-            leftMouseDown = false;
-        }
+        setleftmouseDown(io);
         glfwSwapBuffers(window);
     
     }
