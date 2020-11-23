@@ -103,6 +103,8 @@ int main(int, char**)
         return 1;
     }
 
+#include "Draw.h"
+
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -201,6 +203,9 @@ int main(int, char**)
             // ImGui::Text("counter = %d", counter);
 
             // ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            
+            draw(window);
+            
             ImGui::End();
             ImGui::PopStyleColor();
 
