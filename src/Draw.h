@@ -5,6 +5,17 @@
 
 #include <array>
 
+// #include <glm/vec3.hpp> // glm::vec3
+// #include <glm/vec4.hpp> // glm::vec4
+// #include <glm/mat4x4.hpp> // glm::mat4
+// #include <glm/gtc/matrix_transform.hpp> 
+// #include <glm/glm.hpp>
+// #include <glm/gtc/type_ptr.hpp>
+// About Desktop OpenGL function loaders:
+//  Modern desktop OpenGL doesn't have a standard portable header file to load OpenGL function pointers.
+//  Helper libraries are often used for this purpose! Here we are supporting a few common ones (gl3w, glew, glad).
+//  You may use another loader/header of your choice (glext, glLoadGen, etc.), or chose to manually implement your own.
+
 static int ObjectCount = -1;
 static float transX = 0.0f, transY = 0.0f, ScaleX = 1.0f, ScaleY = 1.0f, Rotate = 0.0f;
 
@@ -19,6 +30,7 @@ public:
         size = 0;
         ObjectCount++;
         Objectid = ObjectCount+1;
+
     }
     
     void addPoint(ImVec2 p){
@@ -26,6 +38,7 @@ public:
         size++;
         pixelObjectMap[(int)(p.x)][(int)(p.y)] = Objectid;
         // printf("%d %d\n", (int)p.x, (int)p.y);
+        glm::mat4 trans = glm::mat4(1.0f);
     }
     
     ImVec2* getPoints(){
@@ -34,6 +47,104 @@ public:
 
     int getSize(){
         return size;
+    }
+
+    void translate(float x, float y)
+    {
+        x = x * 480;
+        y = y * 360; 
+
+
+        //glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+        glm::mat4 trans = glm::mat4(1.0f);
+        trans = glm::translate(trans, glm::vec3(x, y, 0.0f));
+       // vec = trans * vec;
+        //std::cout << vec.x  << " " << vec.y  << " " << vec.z << std::endl;
+
+        // translate Every point of our object
+        for(int i=0;i<size;i++)
+        {
+            float x0 = objectPoints[i].x;
+            float y0 = objectPoints[i].y;
+           // glm::vec4 vec(x0, y0, 0.0f);
+
+            glm::vec4 vec(x0, y0, 0.0f,1.0f);
+
+            vec = trans * vec;
+            objectPoints[i].x = vec.x;
+            objectPoints[i].y = vec.y;
+        }
+    }
+
+    void rotate( int x, int y, float r)
+    {
+        
+        float X = x * 480;
+        float Y = y * 360;
+
+        // Rotation Matrix
+        glm::mat4 rot_mat = glm::rotate(glm::mat4(1.0f), r, glm::vec3(1.0, 0.0,0.0));
+
+        
+         X = X * -1;
+         Y = Y * -1;
+        // Translation Matrix
+        glm::mat4 trans_mat = glm::mat4(1.0f);
+        trans_mat = glm::translate(trans_mat, glm::vec3(X, Y, 0.0f));
+
+
+         X = X * -1;
+         Y = Y * -1;
+        // Invers Translation Matrix
+        glm::mat4 invtrans_mat = glm::translate(trans_mat, glm::vec3(X, Y, 0.0f));
+
+
+        // rotate Every point of our object
+        for(int i=0;i<size;i++)
+        {
+            float x0 = objectPoints[i].x;
+            float y0 = objectPoints[i].y;
+            
+
+            glm::vec4 vec(x0, y0, 0.0f,1.0f);
+
+            // Traslate * rotate * transalte
+            glm::mat4 result_mat = invtrans_mat *  rot_mat * trans_mat;
+            vec = result_mat * vec;
+            //  objectPoints[i].x = vec.x;
+           // objectPoints[i].y = vec.y;
+
+            
+            objectPoints[i].x = vec.x;
+            objectPoints[i].y = vec.y;
+
+        }
+        
+ }   
+
+
+    void scale(int x, int y)
+    {
+
+        x = x * 480;
+        y = y * 360;
+
+        // Scaling Matrix
+        glm::mat4 scale_mat = glm::scale(glm::mat4(1.0f), glm::vec3((float)x,(float)y,1.0));
+
+         for(int i=0;i<size;i++)
+        {
+            float x0 = objectPoints[i].x;
+            float y0 = objectPoints[i].y;
+           // glm::vec4 vec(x0, y0, 0.0f);
+
+            glm::vec4 vec(x0, y0, 0.0f,1.0f);
+
+            vec = scale_mat * vec;
+            objectPoints[i].x = vec.x;
+            objectPoints[i].y = vec.y;
+        }
+
     }
 };
 
@@ -124,7 +235,7 @@ void setleftmouseDown(ImGuiIO io){
 //         glfwGetCursorPos(canvas, &x, &y);
 //         std::cout<<"Leftdown x: "<< x <<" , y: " << y << std::endl;
 //     }
-
+    
 //     if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE){
 //         glfwGetCursorPos(canvas, &x, &y);
 //         std::cout<<"LeftUp x: "<< x <<" , y: " << y << std::endl;
