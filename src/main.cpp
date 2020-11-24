@@ -116,6 +116,7 @@ int main(int, char**)
     const ImU32 MarkerCol32 = ImColor(marker_color);
     const ImU32 SelectCol32 = ImColor(ImVec4(1.0f, 0.1875f, 0.0625f, 1.00f));
     const ImU32 HoverCol32 = ImColor(ImVec4(1.0f, 1.0f, 0.0f, 1.00f));
+    const ImU32 White32 = ImColor(ImVec4(1.0f, 1.0f, 1.0f, 1.00f));
     // Main loop
 
 
@@ -211,18 +212,18 @@ int main(int, char**)
 
             ImGui::SetWindowPos(toolbarpos);
             ImGui::SetWindowSize(toolbarsize);
-            ImGui::Dummy(ImVec2(0.0f, 20.0f));
+            // ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
-            ImGui::ColorEdit3("Ink color", (float*)&marker_color);    // Edit 3 floats representing a color
-            ImGui::Dummy(ImVec2(0.0f, 20.0f));
+            // ImGui::ColorEdit3("Ink color", (float*)&marker_color);    // Edit 3 floats representing a color
+            // ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
-            if (ImGui::Button("Draw")){
+            if (ImGui::Button("Draw", ImVec2(145.0f, 50.0f))){
                 choice = 1;
                 selected = 0;
                 hovered = 0;
             }
             ImGui::SameLine();
-            if(ImGui::Button("Select")){
+            if(ImGui::Button("Select", ImVec2(145.0f, 50.0f))){
                 choice = 2;
             }
             if(choice==1){
@@ -231,6 +232,61 @@ int main(int, char**)
             else{
                 selectCurve(io);
             }
+            //ImGui::Dummy(ImVec2(0.0f, 20.0f));
+
+            ImDrawList* draw_list = ImGui::GetWindowDrawList();
+            draw_list-> AddLine(ImVec2(965.0f, 90.0f), ImVec2(1275.0f, 90.0f), White32);
+
+            ImVec2 cursor = ImGui::GetCursorPos();
+            ImGui::SetCursorPos(ImVec2(10.0f+cursor.x, 20.0f+cursor.y));
+
+            ImGui::SliderFloat("translate X", &transX, -1.0f, 1.0f);
+
+            cursor = ImGui::GetCursorPos();
+            ImGui::SetCursorPos(ImVec2(10.0f+cursor.x, 0.0f+cursor.y));
+            ImGui::SliderFloat("translate y", &transY, -1.0f, 1.0f);
+
+
+
+            draw_list-> AddLine(ImVec2(980.0f, 155.0f), ImVec2(1260.0f, 155.0f), White32);
+            cursor = ImGui::GetCursorPos();
+            ImGui::SetCursorPos(ImVec2(20.0f+cursor.x, 20.0f+cursor.y));
+
+            ImGui::SliderFloat("Scale X", &ScaleX, 0.000001f, 10.0f);
+
+            cursor = ImGui::GetCursorPos();
+            ImGui::SetCursorPos(ImVec2(20.0f+cursor.x, 0.0f+cursor.y));
+            ImGui::SliderFloat("Scale y", &ScaleY, 0.000001f, 10.0f);
+
+
+
+
+            draw_list-> AddLine(ImVec2(980.0f, 220.0f), ImVec2(1260.0f, 220.0f), White32);
+            
+            cursor = ImGui::GetCursorPos();
+            ImGui::SetCursorPos(ImVec2(20.0f+cursor.x, 20.0f+cursor.y));
+
+            ImGui::SliderFloat("Rotate", &Rotate, -1.0f, 1.0f);
+
+
+            draw_list-> AddLine(ImVec2(980.0f, 265.0f), ImVec2(1260.0f, 265.0f), White32);
+            cursor = ImGui::GetCursorPos();
+            ImGui::SetCursorPos(ImVec2(30.0f+cursor.x, 20.0f+cursor.y));
+
+            if (ImGui::Button("Transform", ImVec2(100.0f, 30.0f))){
+                
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Reset", ImVec2(100.0f, 30.0f))){
+                Rotate = 0;
+                ScaleX = 1;
+                ScaleY = 1;
+                transX = 0;
+                transY = 0;
+            }
+
+            draw_list-> AddLine(ImVec2(965.0f, 320.0f), ImVec2(1275.0f, 320.0f), White32);
+            ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
             // ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
             // ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state

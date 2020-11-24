@@ -6,6 +6,7 @@
 #include <array>
 
 static int ObjectCount = -1;
+static float transX = 0.0f, transY = 0.0f, ScaleX = 1.0f, ScaleY = 1.0f, Rotate = 0.0f;
 
 class PlObject
 {
