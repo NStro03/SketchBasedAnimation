@@ -117,7 +117,7 @@ public:
 
         }
         
- }   
+    }   
 
 
     void scale(int anchorX, int anchorY, int x, int y)
