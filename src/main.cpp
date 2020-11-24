@@ -112,7 +112,7 @@ int main(int, char**)
     ImVec2 toolbarpos = ImVec2(960,0);
     ImVec2 sheetsize = ImVec2(960,720);
     ImVec2 sheetpos = ImVec2(0,0);
-    static int choice = 1;
+    static int choice = 1, anchorX=-1, anchorY=-1, choose_anchor=0;
     const ImU32 MarkerCol32 = ImColor(marker_color);
     const ImU32 SelectCol32 = ImColor(ImVec4(1.0f, 0.1875f, 0.0625f, 1.00f));
     const ImU32 HoverCol32 = ImColor(ImVec4(1.0f, 1.0f, 0.0f, 1.00f));
@@ -226,7 +226,19 @@ int main(int, char**)
             if(ImGui::Button("Select", ImVec2(145.0f, 50.0f))){
                 choice = 2;
             }
-            if(choice==1){
+            if(choose_anchor==1){
+                if(ImGui::GetIO().MouseClicked[0]){
+                    ImVec2 distFromClick(io.MouseClickedPos[0]);
+                    x = (int)(distFromClick.x);
+                    y = (int)(distFromClick.y);
+                    if(x>0 && x<960 && y>0 && y<720){
+                        anchorX = x;
+                        anchorY = y;
+                        choose_anchor = 0;
+                    }
+                }
+            }
+            else if(choice==1){
                 draw(window);
             }
             else{
@@ -266,7 +278,7 @@ int main(int, char**)
             cursor = ImGui::GetCursorPos();
             ImGui::SetCursorPos(ImVec2(20.0f+cursor.x, 20.0f+cursor.y));
 
-            ImGui::SliderFloat("Rotate", &Rotate, -1.0f, 1.0f);
+            ImGui::SliderFloat("Rotate", &Rotate, -3.14f, 3.14f);
 
 
             draw_list-> AddLine(ImVec2(980.0f, 265.0f), ImVec2(1260.0f, 265.0f), White32);
@@ -274,7 +286,33 @@ int main(int, char**)
             ImGui::SetCursorPos(ImVec2(30.0f+cursor.x, 20.0f+cursor.y));
 
             if (ImGui::Button("Transform", ImVec2(100.0f, 30.0f))){
-                
+                if(selected>0){
+                    if(transX!=0 || transY!=0)
+                        PlObjects[selected-1].translate(transX, transY);
+                    if(ScaleX!=1.0 || ScaleY!=1.0){
+                        if(anchorX==-1){
+                            choose_anchor = 1;
+                        }
+                        else{
+                            PlObjects[selected-1].scale(anchorX, anchorY, ScaleX, ScaleY);
+                            choose_anchor = 0;
+                        }
+                    }
+                    if(Rotate!=0){
+                        if(anchorX==-1){
+                            choose_anchor = 1;
+                        }
+                        else{
+                            PlObjects[selected-1].rotate(anchorX, anchorY, Rotate);
+                            choose_anchor = 0;
+                        }
+                    }
+                    Rotate = 0;
+                    ScaleX = 1;
+                    ScaleY = 1;
+                    transX = 0;
+                    transY = 0;
+                }
             }
             ImGui::SameLine();
             if (ImGui::Button("Reset", ImVec2(100.0f, 30.0f))){
@@ -283,10 +321,23 @@ int main(int, char**)
                 ScaleY = 1;
                 transX = 0;
                 transY = 0;
+                anchorX = -1;
+                anchorY = -1;
+                choose_anchor = 0;
+            }
+            cursor = ImGui::GetCursorPos();
+            ImGui::SetCursorPos(ImVec2(30.0f+cursor.x, 10.0f+cursor.y));
+
+            if(choose_anchor==0){
+                ImGui::Text("Try Basic Transformations");
+            }
+            else{
+                ImGui::Text("Please Select Anchor Points");
             }
 
-            draw_list-> AddLine(ImVec2(965.0f, 320.0f), ImVec2(1275.0f, 320.0f), White32);
-            ImGui::Dummy(ImVec2(0.0f, 20.0f));
+            // cursor = ImGui::GetCursorPos();
+            // ImGui::SetCursorPos(ImVec2(30.0f+cursor.x, 20.0f+cursor.y));
+            draw_list-> AddLine(ImVec2(965.0f, 350.0f), ImVec2(1275.0f, 350.0f), White32);
 
             // ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
             // ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
