@@ -22,7 +22,7 @@ SOURCES += ../../depends/imgui.cpp ../../depends/imgui_demo.cpp ../../depends/im
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
 
-CXXFLAGS = -I./src/ -I../ -I../../ -I./depends/
+CXXFLAGS = -I./src/ -I../ -I../../ -I./depends/ -I./depends/glm
 CXXFLAGS += -g -Wall -Wformat
 LIBS =
 
@@ -116,5 +116,5 @@ $(EXE): $(OBJS)
 clean:
 # 	rm -f $(EXE) $(addprefix ./objs/, $(OBJS))
 	rm -rf ./objs
-	rm imgui.ini
+# 	rm imgui.ini
 	rm ./SketchBasedAnimation

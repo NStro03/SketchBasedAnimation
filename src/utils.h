@@ -4,6 +4,13 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
+
+#include <glm/vec3.hpp> // glm::vec3
+#include <glm/vec4.hpp> // glm::vec4
+#include <glm/mat4x4.hpp> // glm::mat4
+#include <glm/gtc/matrix_transform.hpp> 
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 // About Desktop OpenGL function loaders:
 //  Modern desktop OpenGL doesn't have a standard portable header file to load OpenGL function pointers.
 //  Helper libraries are often used for this purpose! Here we are supporting a few common ones (gl3w, glew, glad).
