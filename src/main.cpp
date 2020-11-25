@@ -112,7 +112,7 @@ int main(int, char**)
     ImVec2 toolbarpos = ImVec2(960,0);
     ImVec2 sheetsize = ImVec2(960,720);
     ImVec2 sheetpos = ImVec2(0,0);
-    static int choice = 1, anchorX=-1, anchorY=-1, choose_anchor=0;
+    static int choice = 1, anchorX=-1, anchorY=-1, choose_anchor=0, choose_obj=0;
     const ImU32 MarkerCol32 = ImColor(marker_color);
     const ImU32 SelectCol32 = ImColor(ImVec4(1.0f, 0.1875f, 0.0625f, 1.00f));
     const ImU32 HoverCol32 = ImColor(ImVec4(1.0f, 1.0f, 0.0f, 1.00f));
@@ -264,11 +264,11 @@ int main(int, char**)
             cursor = ImGui::GetCursorPos();
             ImGui::SetCursorPos(ImVec2(20.0f+cursor.x, 20.0f+cursor.y));
 
-            ImGui::SliderFloat("Scale X", &ScaleX, 0.000001f, 10.0f);
+            ImGui::SliderFloat("Scale X", &ScaleX, 0.01f, 10.0f);
 
             cursor = ImGui::GetCursorPos();
             ImGui::SetCursorPos(ImVec2(20.0f+cursor.x, 0.0f+cursor.y));
-            ImGui::SliderFloat("Scale y", &ScaleY, 0.000001f, 10.0f);
+            ImGui::SliderFloat("Scale y", &ScaleY, 0.01f, 10.0f);
 
 
 
@@ -282,13 +282,37 @@ int main(int, char**)
 
 
             draw_list-> AddLine(ImVec2(980.0f, 265.0f), ImVec2(1260.0f, 265.0f), White32);
+
             cursor = ImGui::GetCursorPos();
-            ImGui::SetCursorPos(ImVec2(30.0f+cursor.x, 20.0f+cursor.y));
+            if(selected>0 && choose_anchor==2){
+                choose_anchor=0;
+            }
+
+            if(choose_anchor==0){
+                ImGui::SetCursorPos(ImVec2(55.0f+cursor.x, 20.0f+cursor.y));
+                ImGui::Text("Try Basic Transformations");
+            }
+            else if(choose_anchor==1){
+                ImGui::SetCursorPos(ImVec2(50.0f+cursor.x, 20.0f+cursor.y));
+                ImGui::Text("Please Select Anchor Points");
+            }
+            else{
+                ImGui::SetCursorPos(ImVec2(55.0f+cursor.x, 20.0f+cursor.y));
+                ImGui::Text("Please Select An Object");
+            }
+
+            cursor = ImGui::GetCursorPos();
+            ImGui::SetCursorPos(ImVec2(40.0f+cursor.x, 5.0f+cursor.y));
 
             if (ImGui::Button("Transform", ImVec2(100.0f, 30.0f))){
                 if(selected>0){
-                    if(transX!=0 || transY!=0)
+                    choose_anchor = 0;
+                    if(transX!=0 || transY!=0){
                         PlObjects[selected-1].translate(transX, transY);
+                        transX = 0;
+                        transY = 0;
+                        choose_anchor = 0;
+                    }
                     if(ScaleX!=1.0 || ScaleY!=1.0){
                         if(anchorX==-1){
                             choose_anchor = 1;
@@ -296,6 +320,8 @@ int main(int, char**)
                         else{
                             PlObjects[selected-1].scale(anchorX, anchorY, ScaleX, ScaleY);
                             choose_anchor = 0;
+                            ScaleX = 1;
+                            ScaleY = 1;
                         }
                     }
                     if(Rotate!=0){
@@ -305,13 +331,13 @@ int main(int, char**)
                         else{
                             PlObjects[selected-1].rotate(anchorX, anchorY, Rotate);
                             choose_anchor = 0;
+                            Rotate = 0;
                         }
                     }
-                    Rotate = 0;
-                    ScaleX = 1;
-                    ScaleY = 1;
-                    transX = 0;
-                    transY = 0;
+                    
+                }
+                else{
+                    choose_anchor = 2;
                 }
             }
             ImGui::SameLine();
@@ -325,19 +351,50 @@ int main(int, char**)
                 anchorY = -1;
                 choose_anchor = 0;
             }
-            cursor = ImGui::GetCursorPos();
-            ImGui::SetCursorPos(ImVec2(30.0f+cursor.x, 10.0f+cursor.y));
-
-            if(choose_anchor==0){
-                ImGui::Text("Try Basic Transformations");
-            }
-            else{
-                ImGui::Text("Please Select Anchor Points");
-            }
 
             // cursor = ImGui::GetCursorPos();
             // ImGui::SetCursorPos(ImVec2(30.0f+cursor.x, 20.0f+cursor.y));
-            draw_list-> AddLine(ImVec2(965.0f, 350.0f), ImVec2(1275.0f, 350.0f), White32);
+            draw_list-> AddLine(ImVec2(965.0f, 340.0f), ImVec2(1275.0f, 340.0f), White32);
+
+            cursor = ImGui::GetCursorPos();
+            ImGui::SetCursorPos(ImVec2(cursor.x, 20.0f+cursor.y));
+
+            if(selected>0 && choose_obj==1)
+                choose_obj = 0;
+
+            if(choose_obj==0){
+                ImGui::SetCursorPos(ImVec2(70.0f+cursor.x, 20.0f+cursor.y));
+                ImGui::Text("Try Kinetic Textures");
+            }
+            else{
+                ImGui::SetCursorPos(ImVec2(50.0f+cursor.x, 20.0f+cursor.y));
+                ImGui::Text("Please Select Source Object");
+            }
+
+            cursor = ImGui::GetCursorPos();
+            ImGui::SetCursorPos(ImVec2(cursor.x, 5.0f+cursor.y));
+
+            if (ImGui::Button("Emitting", ImVec2(145.0f, 50.0f))){
+                if(choose_anchor==0){
+                    if(selected==0){
+                        choose_obj = 1;
+                    }
+                    else{
+                        choose_obj = 0;
+                    }
+                }
+            }
+            ImGui::SameLine();
+            if(ImGui::Button("Oscillating", ImVec2(145.0f, 50.0f))){
+                if(choose_anchor==0){
+                    if(selected==0){
+                        choose_obj = 1;
+                    }
+                    else{
+                        choose_obj = 0;
+                    }
+                }
+            }
 
             // ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
             // ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state

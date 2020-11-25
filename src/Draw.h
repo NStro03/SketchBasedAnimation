@@ -120,7 +120,7 @@ public:
     }   
 
 
-    void scale(int anchorX, int anchorY, int x, int y)
+    void scale(int anchorX, int anchorY, float x, float y)
     {
         // Scaling Matrix
         anchorX = anchorX * -1;
