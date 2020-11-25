@@ -1,10 +1,10 @@
-#include<vector>
 #include "Draw.h"
 
 class Texture
 {
 protected:
-    std::vector<ImVec2> pathPoints;
+    int size;
+    std::vector<ImVec2> objectPoints;
     glm::mat3 patchMatrix;
     ImVec2 center;
     int length;
@@ -13,11 +13,11 @@ protected:
 
    public:
     void addPathPoint(ImVec2 p){
-        pathPoints.push_back(p);
+        objectPoints.push_back(p);
     }
 
-    ImVec2* getPathPoints(){
-        return &pathPoints[0];
+    ImVec2 getPathPoint(int i){
+        return objectPoints[i];
     }
 
 

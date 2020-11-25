@@ -44,6 +44,9 @@ public:
     ImVec2* getPoints(){
         return &objectPoints[0];
     }
+    ImVec2 getPoint(int i){
+        return objectPoints[i];
+    }
 
     int getSize(){
         return size;

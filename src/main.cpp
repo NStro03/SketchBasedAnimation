@@ -1,7 +1,7 @@
 // dear imgui: standalone example application for GLFW + OpenGL 3, using programmable pipeline
 // If you are new to dear imgui, see examples/README.txt and documentation at the top of imgui.cpp.
 // (GLFW is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan/Metal graphics context creation, etc.)
-#include "Draw.h"
+#include "EmittingTexture.h"
 // Include glfw3.h after our OpenGL definitions
 #include <GLFW/glfw3.h>
 
@@ -117,6 +117,9 @@ int main(int, char**)
     const ImU32 SelectCol32 = ImColor(ImVec4(1.0f, 0.1875f, 0.0625f, 1.00f));
     const ImU32 HoverCol32 = ImColor(ImVec4(1.0f, 1.0f, 0.0f, 1.00f));
     const ImU32 White32 = ImColor(ImVec4(1.0f, 1.0f, 1.0f, 1.00f));
+    int startX=200, startY=200, squareSide = 150;
+    int eText = 0;
+    std::vector<EmittingTexture> emittingTextures;
     // Main loop
 
 
@@ -175,6 +178,13 @@ int main(int, char**)
                 }
                 else{
                     draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), MarkerCol32, false, 3.0f);
+                }
+            }
+            for(i=0;i<eText;i++){
+                int l = emittingTextures[i].getObjectCount(),j=0;
+                for(j=0;j<l;j++){
+                    ImVec2 mid = emittingTextures[i].getPathPoint(j);
+                    draw_list->AddRectFilled(ImVec2(mid.x-10,mid.y-10),ImVec2(mid.x+10,mid.y+10),SelectCol32);
                 }
             }
 
@@ -381,6 +391,9 @@ int main(int, char**)
                     }
                     else{
                         choose_obj = 0;
+                        emittingTextures.push_back(EmittingTexture(PlObjects[selected-1]));
+                        eText++;
+                        printf("%d\n", emittingTextures.size());
                     }
                 }
             }
@@ -423,6 +436,12 @@ int main(int, char**)
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         setleftmouseDown(io);
         glfwSwapBuffers(window);
+        int i=0;
+        for(i=0;i<eText;i++){
+            emittingTextures[i].update();
+            emittingTextures[i].createSampleObject();
+        }
+
     
     }
 
