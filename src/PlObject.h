@@ -32,12 +32,11 @@ public:
 
     }
     
-    void addPoint(ImVec2 p, int pixelObjectMap[961][721]){
+    void addPoint(ImVec2 p){
         objectPoints.push_back(p);
         size++;
-        pixelObjectMap[(int)(p.x)][(int)(p.y)] = Objectid;
         // printf("%d %d\n", (int)p.x, (int)p.y);
-        glm::mat4 trans = glm::mat4(1.0f);
+        //glm::mat4 trans = glm::mat4(1.0f);
     }
     
     ImVec2* getPoints(){
@@ -136,7 +135,7 @@ public:
         anchorY = anchorY * -1;
         // Invers Translation Matrix
         glm::mat4 invtrans_mat = glm::translate(trans, glm::vec3(anchorX, anchorY, 0.0f));
-        glm::mat4 scale_mat = glm::scale(glm::mat4(1.0f), glm::vec3((float)x,(float)y,1.0));
+        glm::mat4 scale_mat = glm::scale(glm::mat4(1.0f), glm::vec3(x,y,1.0));
         glm::mat4 result_mat = invtrans_mat *  scale_mat * trans_mat;
 
          for(int i=0;i<size;i++)

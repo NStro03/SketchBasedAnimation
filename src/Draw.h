@@ -22,11 +22,20 @@ double x,y;
 void draw(GLFWwindow *canvas){
     glfwGetCursorPos(canvas, &x, &y);
     // printf("%s\n", leftMouseDown ? "true" : "false");
+    if(sampleLeftMouseDown){
+        if(y<sampleY)
+            sampleY = y;
+        sampleX = sampleX+x;
+        ImVec2 s(x,y);
+        samplePoints.push_back(s);
+        sampleSize++;
+    }
     if(leftMouseDown){
         ImVec2 s(x,y);
         if(x == prevX && y == prevY)
             return;
-        PlObjects[ObjectCount].addPoint(s, pixelObjectMap);
+        PlObjects[ObjectCount].addPoint(s);
+        pixelObjectMap[(int)(x)][(int)(y)] = ObjectCount+1;
     }
 }
 void setleftmouseDown(ImGuiIO io){
@@ -44,8 +53,27 @@ void setleftmouseDown(ImGuiIO io){
         else{
             leftMouseDown = false;
         }
+
+
+
+        if(io.MousePos.x>980 && io.MousePos.x<1260 && io.MousePos.y>470 && io.MousePos.y<710){
+            if(sampleLeftMouseDown){
+                //printf("%d %d\n", Objects.size(), Objectcount);
+                sampleLeftMouseDown = true;
+            }
+            else if(sampleSize==0){
+                sampleLeftMouseDown = true;
+            }
+            else{
+                sampleLeftMouseDown = false;
+            }
+        }
+        else{
+            sampleLeftMouseDown = false;
+        }
     }
     else{
         leftMouseDown = false;
+        sampleLeftMouseDown = false;
     }
 }

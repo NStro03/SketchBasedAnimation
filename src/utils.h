@@ -32,11 +32,17 @@ int selected = 0, hovered = 0;
 static int ObjectCount = -1;
 static float transX = 0.0f, transY = 0.0f, ScaleX = 1.0f, ScaleY = 1.0f, Rotate = 0.0f;
 
-bool leftMouseDown = false;
+bool leftMouseDown = false, sampleLeftMouseDown = false;
 
 double prevX,prevY;
 
 std::vector<PlObject> PlObjects;
+
+std::vector<ImVec2> samplePoints;
+int sampleSize = 0,sampleSize1=0;
+int sampleY = 720;
+long sampleX=0;
+
 
 static int getObjectid(int x, int y){
 	int i = x-1, s=0,j=y-1;
@@ -71,4 +77,37 @@ static void selectCurve(ImGuiIO io)
         	hovered = objid;
     	}
 	}
+}
+std::vector<ImVec2> translate(float x, float y)
+{
+    std::vector<ImVec2> sampleEmitPoints;
+    int t = -1*((int)(sampleX/sampleSize)), s = -1*sampleY;
+
+    //glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+    glm::mat4 trans = glm::mat4(1.0f);
+    trans = glm::translate(trans, glm::vec3(t, s, 0.0f));
+    trans = glm::translate(trans, glm::vec3(x, y, 0.0f));
+   // vec = trans * vec;
+    //std::cout << vec.x  << " " << vec.y  << " " << vec.z << std::endl;
+
+    // translate Every point of our object
+    for(int i=0;i<sampleSize;i++)
+    {
+        float x0 = samplePoints[i].x;
+        float y0 = samplePoints[i].y;
+       // glm::vec4 vec(x0, y0, 0.0f);
+
+        glm::vec4 vec(x0, y0, 0.0f,1.0f);
+
+        vec = trans * vec;
+        if(vec.x!=0 || vec.y!=0){
+            sampleEmitPoints.push_back(ImVec2(vec.x, vec.y));
+            sampleSize1++;
+        }
+    }
+    //printf("%d\n", sampleEmitPoints.size());
+    if(sampleSize!=sampleEmitPoints.size()){
+        printf("%d %d\n",sampleEmitPoints.size(), sampleSize);
+    }
+    return sampleEmitPoints;
 }
