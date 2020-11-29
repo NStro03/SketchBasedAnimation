@@ -1,17 +1,5 @@
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-#include <stdio.h>
-#include <iostream>
-#include <vector>
+#include "PlObject.h"
 
-#include <glm/vec3.hpp> // glm::vec3
-#include <glm/vec4.hpp> // glm::vec4
-#include <glm/mat4x4.hpp> // glm::mat4
-#include <glm/mat3x3.hpp> // glm::mat3
-#include <glm/gtc/matrix_transform.hpp> 
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
 // About Desktop OpenGL function loaders:
 //  Modern desktop OpenGL doesn't have a standard portable header file to load OpenGL function pointers.
 //  Helper libraries are often used for this purpose! Here we are supporting a few common ones (gl3w, glew, glad).
@@ -40,6 +28,16 @@ using namespace gl;
 
 int pixelObjectMap[961][721];
 int selected = 0, hovered = 0;
+
+static int ObjectCount = -1;
+static float transX = 0.0f, transY = 0.0f, ScaleX = 1.0f, ScaleY = 1.0f, Rotate = 0.0f;
+
+bool leftMouseDown = false;
+
+double prevX,prevY;
+
+std::vector<PlObject> PlObjects;
+
 static int getObjectid(int x, int y){
 	int i = x-1, s=0,j=y-1;
 	for(;i<=x+1;i++){

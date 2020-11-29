@@ -393,7 +393,7 @@ int main(int, char**)
                         choose_obj = 0;
                         emittingTextures.push_back(EmittingTexture(PlObjects[selected-1]));
                         eText++;
-                        printf("%d\n", emittingTextures.size());
+                        // printf("%d\n", emittingTextures.size());
                     }
                 }
             }
