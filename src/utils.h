@@ -43,6 +43,8 @@ int sampleSize = 0,sampleSize1=0;
 int sampleY = 720;
 long sampleX=0;
 
+int eText = 0;
+
 
 static int getObjectid(int x, int y){
 	int i = x-1, s=0,j=y-1;

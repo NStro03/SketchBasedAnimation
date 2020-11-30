@@ -118,7 +118,6 @@ int main(int, char**)
     const ImU32 HoverCol32 = ImColor(ImVec4(1.0f, 1.0f, 0.0f, 1.00f));
     const ImU32 White32 = ImColor(ImVec4(1.0f, 1.0f, 1.0f, 1.00f));
     const ImU32 LightYellow32 = ImColor(ImVec4(1.0f, 1.0f, 0.933, 1.00f));
-    int eText = 0;
     std::vector<EmittingTexture> emittingTextures;
     // Main loop
 
@@ -194,7 +193,7 @@ int main(int, char**)
                         draw_list->AddPolyline(&sampleEmitPoints[0], sampleEmitPoints.size(), MarkerCol32, false, 3.0f);
                     }
                     else{
-                        draw_list->AddRectFilled(ImVec2(mid.x-10,mid.y-10),ImVec2(mid.x+10,mid.y+10),SelectCol32);
+                        draw_list->AddRectFilled(ImVec2(mid.x-7,mid.y-7),ImVec2(mid.x+7,mid.y+7),MarkerCol32);
                     }
                 }
             }
@@ -238,15 +237,51 @@ int main(int, char**)
             // ImGui::ColorEdit3("Ink color", (float*)&marker_color);    // Edit 3 floats representing a color
             // ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
+            ImVec4 a, b, aH, bH, aA, bA;
+            a = ImVec4(0.0f, 0.549f, 0.729f, 0.7f);
+            aH = ImVec4(0.0f, 0.549f, 0.729f, 0.5f);
+            aA = ImVec4(0.0f, 0.549f, 0.729f, 1.00f);
+            b = ImVec4(0.0f, 0.549f, 0.729f, 0.7f);
+            bH = ImVec4(0.0f, 0.549f, 0.729f, 0.5f);
+            bA = ImVec4(0.0f, 0.549f, 0.729f, 1.00f);
+            if(choice==1){
+                a = ImVec4(0.298f, 0.686f, 0.314f, 0.7f);
+                aH = ImVec4(0.298f, 0.686f, 0.314f, 0.5f);
+                aA = ImVec4(0.298f, 0.686f, 0.314f, 1.00f);
+            }
+            else{
+                
+                b = ImVec4(0.298f, 0.686f, 0.314f, 0.7f);
+                bH = ImVec4(0.298f, 0.686f, 0.314f, 0.5f);
+                bA = ImVec4(0.298f, 0.686f, 0.314f, 1.00f);
+            }
+
+            ImGui::PushStyleColor(ImGuiCol_Button, a);
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, aH);
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, aA);
+
             if (ImGui::Button("Draw", ImVec2(145.0f, 50.0f))){
                 choice = 1;
                 selected = 0;
                 hovered = 0;
             }
+
+            ImGui::PopStyleColor();
+            ImGui::PopStyleColor();
+            ImGui::PopStyleColor();
+
+            ImGui::PushStyleColor(ImGuiCol_Button, b);
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, bH);
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, bA);
+
             ImGui::SameLine();
             if(ImGui::Button("Select", ImVec2(145.0f, 50.0f))){
                 choice = 2;
             }
+
+            ImGui::PopStyleColor();
+            ImGui::PopStyleColor();
+            ImGui::PopStyleColor();
             if(choose_anchor==1){
                 if(ImGui::GetIO().MouseClicked[0]){
                     ImVec2 distFromClick(io.MouseClickedPos[0]);
@@ -426,6 +461,8 @@ int main(int, char**)
             ImGui::SetCursorPos(ImVec2(20+cursor.x, 20.0f+cursor.y));
             if(ImGui::Button("Draw Sample", ImVec2(250.0f, 30.0f))){
                 samplePoints.clear();
+                emittingTextures.clear();
+                eText = 0;
                 sampleSize = 0;
                 sampleX = 0;
                 sampleY = 720;

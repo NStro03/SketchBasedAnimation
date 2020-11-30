@@ -61,7 +61,7 @@ void setleftmouseDown(ImGuiIO io){
                 //printf("%d %d\n", Objects.size(), Objectcount);
                 sampleLeftMouseDown = true;
             }
-            else if(sampleSize==0){
+            else if(sampleSize==0 && eText==0){
                 sampleLeftMouseDown = true;
             }
             else{
