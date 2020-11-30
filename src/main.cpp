@@ -103,8 +103,8 @@ int main(int, char**)
     //IM_ASSERT(font != NULL);
 
     // Our state
-    bool show_demo_window = true;
-    bool show_another_window = false;
+    // bool show_demo_window = true;
+    // bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     ImVec4 marker_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
     ImVec4 sheet_color = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
@@ -117,7 +117,7 @@ int main(int, char**)
     const ImU32 SelectCol32 = ImColor(ImVec4(1.0f, 0.1875f, 0.0625f, 1.00f));
     const ImU32 HoverCol32 = ImColor(ImVec4(1.0f, 1.0f, 0.0f, 1.00f));
     const ImU32 White32 = ImColor(ImVec4(1.0f, 1.0f, 1.0f, 1.00f));
-    int startX=200, startY=200, squareSide = 150;
+    const ImU32 LightYellow32 = ImColor(ImVec4(1.0f, 1.0f, 0.933, 1.00f));
     int eText = 0;
     std::vector<EmittingTexture> emittingTextures;
     // Main loop
@@ -182,9 +182,20 @@ int main(int, char**)
             }
             for(i=0;i<eText;i++){
                 int l = emittingTextures[i].getObjectCount(),j=0;
+
                 for(j=0;j<l;j++){
                     ImVec2 mid = emittingTextures[i].getPathPoint(j);
-                    draw_list->AddRectFilled(ImVec2(mid.x-10,mid.y-10),ImVec2(mid.x+10,mid.y+10),SelectCol32);
+                    if(sampleSize>0){
+                        // printf("%d %d %d\n", sampleSize,l, sampleEmitPoints.size());
+                        // if(j==0){
+                        //     for(int p=0;p<sampleSize;p++);
+                        // }
+                        std::vector<ImVec2> sampleEmitPoints = translate(mid.x, mid.y);
+                        draw_list->AddPolyline(&sampleEmitPoints[0], sampleEmitPoints.size(), MarkerCol32, false, 3.0f);
+                    }
+                    else{
+                        draw_list->AddRectFilled(ImVec2(mid.x-10,mid.y-10),ImVec2(mid.x+10,mid.y+10),SelectCol32);
+                    }
                 }
             }
 
@@ -382,9 +393,9 @@ int main(int, char**)
             }
 
             cursor = ImGui::GetCursorPos();
-            ImGui::SetCursorPos(ImVec2(cursor.x, 5.0f+cursor.y));
+            ImGui::SetCursorPos(ImVec2(40+cursor.x, 5.0f+cursor.y));
 
-            if (ImGui::Button("Emitting", ImVec2(145.0f, 50.0f))){
+            if (ImGui::Button("Emitting", ImVec2(100.0f, 30.0f))){
                 if(choose_anchor==0){
                     if(selected==0){
                         choose_obj = 1;
@@ -393,12 +404,12 @@ int main(int, char**)
                         choose_obj = 0;
                         emittingTextures.push_back(EmittingTexture(PlObjects[selected-1]));
                         eText++;
-                        printf("%d\n", emittingTextures.size());
+                        // printf("%d\n", emittingTextures.size());
                     }
                 }
             }
             ImGui::SameLine();
-            if(ImGui::Button("Oscillating", ImVec2(145.0f, 50.0f))){
+            if(ImGui::Button("Oscillating", ImVec2(100.0f, 30.0f))){
                 if(choose_anchor==0){
                     if(selected==0){
                         choose_obj = 1;
@@ -408,6 +419,21 @@ int main(int, char**)
                     }
                 }
             }
+
+            draw_list-> AddLine(ImVec2(965.0f, 415.0f), ImVec2(1275.0f, 415.0f), White32);
+
+            cursor = ImGui::GetCursorPos();
+            ImGui::SetCursorPos(ImVec2(20+cursor.x, 20.0f+cursor.y));
+            if(ImGui::Button("Draw Sample", ImVec2(250.0f, 30.0f))){
+                samplePoints.clear();
+                sampleSize = 0;
+                sampleX = 0;
+                sampleY = 720;
+            }
+
+            draw_list->AddRectFilled(ImVec2(980,470),ImVec2(1260,710),LightYellow32);
+
+            draw_list->AddPolyline(&samplePoints[0], sampleSize, MarkerCol32, false, 3.0f);
 
             // ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
             // ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state

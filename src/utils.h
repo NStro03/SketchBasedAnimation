@@ -1,17 +1,5 @@
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-#include <stdio.h>
-#include <iostream>
-#include <vector>
+#include "PlObject.h"
 
-#include <glm/vec3.hpp> // glm::vec3
-#include <glm/vec4.hpp> // glm::vec4
-#include <glm/mat4x4.hpp> // glm::mat4
-#include <glm/mat3x3.hpp> // glm::mat3
-#include <glm/gtc/matrix_transform.hpp> 
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
 // About Desktop OpenGL function loaders:
 //  Modern desktop OpenGL doesn't have a standard portable header file to load OpenGL function pointers.
 //  Helper libraries are often used for this purpose! Here we are supporting a few common ones (gl3w, glew, glad).
@@ -40,6 +28,22 @@ using namespace gl;
 
 int pixelObjectMap[961][721];
 int selected = 0, hovered = 0;
+
+static int ObjectCount = -1;
+static float transX = 0.0f, transY = 0.0f, ScaleX = 1.0f, ScaleY = 1.0f, Rotate = 0.0f;
+
+bool leftMouseDown = false, sampleLeftMouseDown = false;
+
+double prevX,prevY;
+
+std::vector<PlObject> PlObjects;
+
+std::vector<ImVec2> samplePoints;
+int sampleSize = 0,sampleSize1=0;
+int sampleY = 720;
+long sampleX=0;
+
+
 static int getObjectid(int x, int y){
 	int i = x-1, s=0,j=y-1;
 	for(;i<=x+1;i++){
@@ -73,4 +77,37 @@ static void selectCurve(ImGuiIO io)
         	hovered = objid;
     	}
 	}
+}
+std::vector<ImVec2> translate(float x, float y)
+{
+    std::vector<ImVec2> sampleEmitPoints;
+    int t = -1*((int)(sampleX/sampleSize)), s = -1*sampleY;
+
+    //glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+    glm::mat4 trans = glm::mat4(1.0f);
+    trans = glm::translate(trans, glm::vec3(t, s, 0.0f));
+    trans = glm::translate(trans, glm::vec3(x, y, 0.0f));
+   // vec = trans * vec;
+    //std::cout << vec.x  << " " << vec.y  << " " << vec.z << std::endl;
+
+    // translate Every point of our object
+    for(int i=0;i<sampleSize;i++)
+    {
+        float x0 = samplePoints[i].x;
+        float y0 = samplePoints[i].y;
+       // glm::vec4 vec(x0, y0, 0.0f);
+
+        glm::vec4 vec(x0, y0, 0.0f,1.0f);
+
+        vec = trans * vec;
+        if(vec.x!=0 || vec.y!=0){
+            sampleEmitPoints.push_back(ImVec2(vec.x, vec.y));
+            sampleSize1++;
+        }
+    }
+    //printf("%d\n", sampleEmitPoints.size());
+    if(sampleSize!=sampleEmitPoints.size()){
+        printf("%d %d\n",sampleEmitPoints.size(), sampleSize);
+    }
+    return sampleEmitPoints;
 }
