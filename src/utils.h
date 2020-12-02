@@ -45,6 +45,14 @@ long sampleX=0;
 
 int eText = 0;
 
+// Oscillation Texture Variable part
+int osText = 0; // flag for oscillation texture
+int initialX, finalX, currentX;
+int initialY, finalY, currentY;
+std::vector<ImVec2> oscillationObject;   
+int counter = 0;
+int choose_final = 0;
+
 
 static int getObjectid(int x, int y){
 	int i = x-1, s=0,j=y-1;
@@ -113,3 +121,131 @@ std::vector<ImVec2> translate(float x, float y)
     }
     return sampleEmitPoints;
 }
+
+
+
+
+ // Make Global Variable : 
+ // std::vector<ImVec2>  :  oscillationObject , oscillationSize, counter
+ // 2 function : oscillationUpdate(), oscillationCreate()
+ // create(objectid) : long sum = 0; global variable :  initialX, finalX, currentX ; 
+ //  
+
+void oscillationCreate(int objectid)
+{   int oscillationSize = PlObjects[objectid-1].getSize();
+   
+   int midX = 1000; // to store average values of X  and Y in vector of Points(x,y) 
+   //long midY = 0
+    // copying object into another object : copy vector elements
+   for(int i=0; i<oscillationSize; i++)
+   {
+    oscillationObject.push_back(ImVec2(PlObjects[objectid-1].getPoint(i).x, PlObjects[objectid-1].getPoint(i).y));
+
+    if(midX > PlObjects[objectid-1].getPoint(i).x)
+    midX =  PlObjects[objectid-1].getPoint(i).x;
+    //midY = midY + PlObjects[objectid-1][i].y;
+   }
+
+   //midX = midX / oscillationSize;
+   //midY = midY / oscillationSize;
+
+   initialX = midX;
+  //
+
+   std::cout << finalX << " " << initialX <<" " << counter << "\n";
+}
+
+void oscillationUpdate()
+{
+
+    if(currentX >= finalX || currentX <= initialX)
+    {
+         // swapping initialX and finalX
+        // int temp = finalX;
+        // finalX = initialX;
+        // initialX = finalX;
+        counter = counter * -1; // counter is set to negative  : starts in opposite direction
+    }
+
+    currentX = currentX + counter;
+
+    for(int i=0; i<oscillationObject.size(); i++)
+    {   
+
+        oscillationObject[i].x = oscillationObject[i].x +  counter;
+        oscillationObject[i].y = oscillationObject[i].y + 0;
+    }    
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+PlObject Oscillate(ImGuiIO io)
+{
+    PlObject Obj; 
+
+    for(int i=0; i<PlObjects.size(); i++)
+    {
+        if(PlObjects[i].getObjectid() == selected)
+        {
+            obj(PlObjects[i]);
+        }
+    } 
+
+     ImVec2 distFromClick(io.MouseClickedPos[0]);
+     int finalX = (int)(distFromClick.x);
+     int y = (int)(distFromClick.y);
+
+     int oscillateX = finalX / 16 ;
+      
+    
+
+    
+
+
+
+    for(int i=0; i<obj.getsize(); i++)
+    {   
+
+        glm::mat4 trans = glm::mat4(1.0f);
+        trans = glm::translate(trans, glm::vec3(oscillateX, oscillateY, 0.0f));
+        
+        float x0 = oscillationObject[i].x;
+        float y0 = oscillationObject[i].y;
+        // glm::vec4 vec(x0, y0, 0.0f);
+
+        glm::vec4 vec(x0, y0, 0.0f,1.0f);
+
+        vec = trans * vec;
+        obj[i].x = vec.x;
+        obj[i].y = vec.y;
+
+         x = x + 16;
+
+    }    
+
+
+
+
+
+
+}
+*/
+
+

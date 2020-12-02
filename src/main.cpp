@@ -4,6 +4,7 @@
 #include "EmittingTexture.h"
 // Include glfw3.h after our OpenGL definitions
 #include <GLFW/glfw3.h>
+//#include "utils.h"
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -119,6 +120,7 @@ int main(int, char**)
     const ImU32 White32 = ImColor(ImVec4(1.0f, 1.0f, 1.0f, 1.00f));
     const ImU32 LightYellow32 = ImColor(ImVec4(1.0f, 1.0f, 0.933, 1.00f));
     std::vector<EmittingTexture> emittingTextures;
+    
     // Main loop
 
 
@@ -179,6 +181,15 @@ int main(int, char**)
                     draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), MarkerCol32, false, 3.0f);
                 }
             }
+
+            // if(osText == 1) add polyline ;
+            // Oscillatin  : Add polyline for copied object ?????????????????????????????????????
+            // change first two , keep rest same
+            if(osText == 1)
+            {
+                draw_list->AddPolyline(&oscillationObject[0], oscillationObject.size(), MarkerCol32, false, 3.0f);
+            }
+
             for(i=0;i<eText;i++){
                 int l = emittingTextures[i].getObjectCount(),j=0;
 
@@ -282,7 +293,33 @@ int main(int, char**)
             ImGui::PopStyleColor();
             ImGui::PopStyleColor();
             ImGui::PopStyleColor();
-            if(choose_anchor==1){
+            
+            // if condition for flag , Capture final mouse X coordinate ?????????????????????????????????????
+            // elseif niche wali  
+            // global variable : osText = 1;
+            if(choose_final == 1)
+            {
+                if(ImGui::GetIO().MouseClicked[0])
+                {
+                    ImVec2 distFromClick(io.MouseClickedPos[0]);
+                    int X = (int) (distFromClick.x);
+                    int Y = (int) (distFromClick.y);
+                   
+                    // if goes of the canvas window : it sets it to corner values of the canvas
+                    if((X>0 && X<960 && Y>0 && Y<720))
+                    {
+                        finalX = X;
+                        finalY = Y;
+                        choose_final = 0;
+                        osText = 1;
+                        counter = (int)((initialX - finalX) / 32);
+                          std::cout <<"NEW WALA" << finalX << " " << initialX <<" " << counter << "\n";
+                    }
+
+                }
+            }
+
+            else if(choose_anchor==1){
                 if(ImGui::GetIO().MouseClicked[0]){
                     ImVec2 distFromClick(io.MouseClickedPos[0]);
                     x = (int)(distFromClick.x);
@@ -451,6 +488,9 @@ int main(int, char**)
                     }
                     else{
                         choose_obj = 0;
+                        oscillationCreate(selected); // paased the objectId 
+                        choose_final = 1;
+                        // copy the selected object and update flag to 1 ?????????????????????????????????????
                     }
                 }
             }
@@ -505,7 +545,14 @@ int main(int, char**)
             emittingTextures[i].createSampleObject();
         }
 
-    
+        // if condition followed by update function
+        // if(osText == 1) update;
+        // Oscillation Update  ?????????????????????????????????????
+        // 
+        if(osText == 1)
+        {
+            oscillationUpdate();
+        }
     }
 
     // Cleanup
