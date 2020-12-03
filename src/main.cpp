@@ -43,7 +43,7 @@ int main(int, char**)
 #endif
 
     // Create window with graphics context
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "Sketch Based Animation", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(1280, 785, "Sketch Based Animation", NULL, NULL);
     if (window == NULL)
         return 1;
     glfwMakeContextCurrent(window);
@@ -109,7 +109,7 @@ int main(int, char**)
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     ImVec4 marker_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
     ImVec4 sheet_color = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
-    ImVec2 toolbarsize = ImVec2(320,720);
+    ImVec2 toolbarsize = ImVec2(320,785);
     ImVec2 toolbarpos = ImVec2(960,0);
     ImVec2 sheetsize = ImVec2(960,720);
     ImVec2 sheetpos = ImVec2(0,0);
@@ -120,7 +120,7 @@ int main(int, char**)
     const ImU32 White32 = ImColor(ImVec4(1.0f, 1.0f, 1.0f, 1.00f));
     const ImU32 LightYellow32 = ImColor(ImVec4(1.0f, 1.0f, 0.933, 1.00f));
     std::vector<EmittingTexture> emittingTextures;
-    
+    int Time = 0;
     // Main loop
 
 
@@ -243,6 +243,8 @@ int main(int, char**)
 
             ImGui::SetWindowPos(toolbarpos);
             ImGui::SetWindowSize(toolbarsize);
+
+            ImDrawList* draw_list = ImGui::GetWindowDrawList();
             // ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
             // ImGui::ColorEdit3("Ink color", (float*)&marker_color);    // Edit 3 floats representing a color
@@ -271,7 +273,10 @@ int main(int, char**)
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, aH);
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, aA);
 
-            if (ImGui::Button("Draw", ImVec2(145.0f, 50.0f))){
+            ImVec2 cursor = ImGui::GetCursorPos();
+            ImGui::SetCursorPos(ImVec2(20+cursor.x, cursor.y));
+
+            if (ImGui::Button("Draw", ImVec2(130.0f, 50.0f))){
                 choice = 1;
                 selected = 0;
                 hovered = 0;
@@ -286,7 +291,7 @@ int main(int, char**)
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, bA);
 
             ImGui::SameLine();
-            if(ImGui::Button("Select", ImVec2(145.0f, 50.0f))){
+            if(ImGui::Button("Select", ImVec2(130.0f, 50.0f))){
                 choice = 2;
             }
 
@@ -331,6 +336,18 @@ int main(int, char**)
                     }
                 }
             }
+
+            draw_list-> AddLine(ImVec2(970.0f, 85.0f), ImVec2(1270.0f, 85.0f), White32);
+
+            cursor = ImGui::GetCursorPos();
+            ImGui::SetCursorPos(ImVec2(20+cursor.x, 10+cursor.y));
+            if(ImGui::Button("Graph Mode", ImVec2(130.0f, 50.0f))){
+                choice = 3;
+            }
+            ImGui::SameLine();
+            if(ImGui::Button("Present", ImVec2(130.0f, 50.0f))){
+                choice = 4;
+            }
             else if(choice==1){
                 draw(window);
             }
@@ -339,10 +356,10 @@ int main(int, char**)
             }
             //ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
-            ImDrawList* draw_list = ImGui::GetWindowDrawList();
-            draw_list-> AddLine(ImVec2(965.0f, 90.0f), ImVec2(1275.0f, 90.0f), White32);
+            
+            draw_list-> AddLine(ImVec2(965.0f, 155.0f), ImVec2(1275.0f, 155.0f), White32);
 
-            ImVec2 cursor = ImGui::GetCursorPos();
+            cursor = ImGui::GetCursorPos();
             ImGui::SetCursorPos(ImVec2(10.0f+cursor.x, 20.0f+cursor.y));
 
             ImGui::SliderFloat("translate X", &transX, -1.0f, 1.0f);
@@ -353,7 +370,7 @@ int main(int, char**)
 
 
 
-            draw_list-> AddLine(ImVec2(980.0f, 155.0f), ImVec2(1260.0f, 155.0f), White32);
+            draw_list-> AddLine(ImVec2(980.0f, 220.0f), ImVec2(1260.0f, 220.0f), White32);
             cursor = ImGui::GetCursorPos();
             ImGui::SetCursorPos(ImVec2(20.0f+cursor.x, 20.0f+cursor.y));
 
@@ -366,7 +383,7 @@ int main(int, char**)
 
 
 
-            draw_list-> AddLine(ImVec2(980.0f, 220.0f), ImVec2(1260.0f, 220.0f), White32);
+            draw_list-> AddLine(ImVec2(980.0f, 285.0f), ImVec2(1260.0f, 285.0f), White32);
             
             cursor = ImGui::GetCursorPos();
             ImGui::SetCursorPos(ImVec2(20.0f+cursor.x, 20.0f+cursor.y));
@@ -374,7 +391,7 @@ int main(int, char**)
             ImGui::SliderFloat("Rotate", &Rotate, -3.14f, 3.14f);
 
 
-            draw_list-> AddLine(ImVec2(980.0f, 265.0f), ImVec2(1260.0f, 265.0f), White32);
+            draw_list-> AddLine(ImVec2(980.0f, 330.0f), ImVec2(1260.0f, 330.0f), White32);
 
             cursor = ImGui::GetCursorPos();
             if(selected>0 && choose_anchor==2){
@@ -447,7 +464,7 @@ int main(int, char**)
 
             // cursor = ImGui::GetCursorPos();
             // ImGui::SetCursorPos(ImVec2(30.0f+cursor.x, 20.0f+cursor.y));
-            draw_list-> AddLine(ImVec2(965.0f, 340.0f), ImVec2(1275.0f, 340.0f), White32);
+            draw_list-> AddLine(ImVec2(965.0f, 405.0f), ImVec2(1275.0f, 405.0f), White32);
 
             cursor = ImGui::GetCursorPos();
             ImGui::SetCursorPos(ImVec2(cursor.x, 20.0f+cursor.y));
@@ -495,7 +512,7 @@ int main(int, char**)
                 }
             }
 
-            draw_list-> AddLine(ImVec2(965.0f, 415.0f), ImVec2(1275.0f, 415.0f), White32);
+            draw_list-> AddLine(ImVec2(965.0f, 480.0f), ImVec2(1275.0f, 480.0f), White32);
 
             cursor = ImGui::GetCursorPos();
             ImGui::SetCursorPos(ImVec2(20+cursor.x, 20.0f+cursor.y));
@@ -508,7 +525,7 @@ int main(int, char**)
                 sampleY = 720;
             }
 
-            draw_list->AddRectFilled(ImVec2(980,470),ImVec2(1260,710),LightYellow32);
+            draw_list->AddRectFilled(ImVec2(980,535),ImVec2(1260,775),LightYellow32);
 
             draw_list->AddPolyline(&samplePoints[0], sampleSize, MarkerCol32, false, 3.0f);
 
@@ -528,6 +545,22 @@ int main(int, char**)
 
 
             
+        }
+        {
+            // ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.91f,0.96f,0.95f,1.0f));
+            // ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.960f, 0.690f, 0.254f,1.0f));
+            ImGui::Begin("Timer", NULL, 38);                          // Create a window called "Hello, world!" and append into it.
+            ImGui::PushItemWidth(940);
+            ImGui::Dummy(ImVec2(0.0f, 1.0f));
+            ImGui::SetWindowPos(ImVec2(0,720));
+            ImGui::SetWindowSize(ImVec2(960,65));
+
+            ImGui::SliderInt("", &Time, 0,10);
+            ImGui::PopItemWidth();
+            ImGui::End();
+            // ImGui::PopStyleColor();
+            // ImGui::PopStyleColor();
+
         }
         // Rendering
         ImGui::Render();

@@ -56,7 +56,7 @@ void setleftmouseDown(ImGuiIO io){
 
 
 
-        if(io.MousePos.x>980 && io.MousePos.x<1260 && io.MousePos.y>470 && io.MousePos.y<710){
+        if(io.MousePos.x>980 && io.MousePos.x<1260 && io.MousePos.y>535 && io.MousePos.y<775){
             if(sampleLeftMouseDown){
                 //printf("%d %d\n", Objects.size(), Objectcount);
                 sampleLeftMouseDown = true;
