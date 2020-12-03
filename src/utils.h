@@ -134,25 +134,24 @@ std::vector<ImVec2> translate(float x, float y)
 void oscillationCreate(int objectid)
 {   int oscillationSize = PlObjects[objectid-1].getSize();
    
-   int midX = 1000; // to store average values of X  and Y in vector of Points(x,y) 
+   long midX = 0; // to store average values of X  and Y in vector of Points(x,y) 
    //long midY = 0
     // copying object into another object : copy vector elements
    for(int i=0; i<oscillationSize; i++)
    {
     oscillationObject.push_back(ImVec2(PlObjects[objectid-1].getPoint(i).x, PlObjects[objectid-1].getPoint(i).y));
-
-    if(midX > PlObjects[objectid-1].getPoint(i).x)
-    midX =  PlObjects[objectid-1].getPoint(i).x;
+    midX = midX + PlObjects[objectid-1].getPoint(i).x;
     //midY = midY + PlObjects[objectid-1][i].y;
    }
 
    //midX = midX / oscillationSize;
    //midY = midY / oscillationSize;
 
-   initialX = midX;
+   initialX = (int)(midX / oscillationSize);
+   currentX = initialX;
   //
 
-   std::cout << finalX << " " << initialX <<" " << counter << "\n";
+   // std::cout << finalX << " " << initialX <<" " << counter << "\n";
 }
 
 void oscillationUpdate()

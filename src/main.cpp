@@ -317,8 +317,10 @@ int main(int, char**)
                         finalY = Y;
                         choose_final = 0;
                         osText = 1;
-                        counter = (int)((initialX - finalX) / 32);
-                          std::cout <<"NEW WALA" << finalX << " " << initialX <<" " << counter << "\n";
+                        counter = 5;
+                        if(initialX<finalX)
+                            counter = -5;
+                        // std::cout <<"NEW WALA" << finalX << " " << initialX <<" " << counter << "\n";
                     }
 
                 }
@@ -336,6 +338,12 @@ int main(int, char**)
                     }
                 }
             }
+            else if(choice==1){
+                draw(window);
+            }
+            else{
+                selectCurve(io);
+            }
 
             draw_list-> AddLine(ImVec2(970.0f, 85.0f), ImVec2(1270.0f, 85.0f), White32);
 
@@ -347,12 +355,6 @@ int main(int, char**)
             ImGui::SameLine();
             if(ImGui::Button("Present", ImVec2(130.0f, 50.0f))){
                 choice = 4;
-            }
-            else if(choice==1){
-                draw(window);
-            }
-            else{
-                selectCurve(io);
             }
             //ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
