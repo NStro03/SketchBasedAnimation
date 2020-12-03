@@ -171,7 +171,10 @@ int main(int, char**)
             for(i=0;i<PlObjects.size();i++){
                 // std::vector<ImVec2> points = PlObjects[ObjectCount].getPoints();
                 //printf("%d %d\n",i,Objects[i].size);
-                if(selected==i+1){
+                if(i+1==oscillationObjectid){
+
+                }
+                else if(selected==i+1){
                     draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), SelectCol32, false, 3.0f);
                 }
                 else if(hovered==i+1){
@@ -318,6 +321,8 @@ int main(int, char**)
                         choose_final = 0;
                         osText = 1;
                         counter = 5;
+                        oscillationObjectid = selected;
+                        selected = 0;
                         if(initialX<finalX)
                             counter = -5;
                         // std::cout <<"NEW WALA" << finalX << " " << initialX <<" " << counter << "\n";
@@ -474,7 +479,11 @@ int main(int, char**)
             if(selected>0 && choose_obj==1)
                 choose_obj = 0;
 
-            if(choose_obj==0){
+            if(choose_final==1){
+                ImGui::SetCursorPos(ImVec2(50.0f+cursor.x, 20.0f+cursor.y));
+                ImGui::Text("Please Select Final Position");
+            }
+            else if(choose_obj==0){
                 ImGui::SetCursorPos(ImVec2(70.0f+cursor.x, 20.0f+cursor.y));
                 ImGui::Text("Try Kinetic Textures");
             }
@@ -507,8 +516,11 @@ int main(int, char**)
                     }
                     else{
                         choose_obj = 0;
+                        oscillationObjectid=0;
+                        oscillationObject.clear();
                         oscillationCreate(selected); // paased the objectId 
                         choose_final = 1;
+                        osText = 0;
                         // copy the selected object and update flag to 1 ?????????????????????????????????????
                     }
                 }

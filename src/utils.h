@@ -52,6 +52,7 @@ int initialY, finalY, currentY;
 std::vector<ImVec2> oscillationObject;   
 int counter = 0;
 int choose_final = 0;
+int oscillationObjectid=0;
 
 
 static int getObjectid(int x, int y){
