@@ -175,7 +175,9 @@ int main(int, char**)
 
                 }
                 else if(selected==i+1){
-                    draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), SelectCol32, false, 3.0f);
+                    // draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), SelectCol32, false, 3.0f);
+                    transformSelectedPlObj(anchorX, anchorY);
+                    draw_list->AddPolyline(selectedPlObj.getPoints(),selectedPlObj.getSize(), SelectCol32, false, 3.0f);
                 }
                 else if(hovered==i+1){
                     draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), HoverCol32, false, 3.0f);
@@ -422,40 +424,7 @@ int main(int, char**)
             ImGui::SetCursorPos(ImVec2(40.0f+cursor.x, 5.0f+cursor.y));
 
             if (ImGui::Button("Transform", ImVec2(100.0f, 30.0f))){
-                if(selected>0){
-                    choose_anchor = 0;
-                    if(transX!=0 || transY!=0){
-                        PlObjects[selected-1].translate(transX, transY);
-                        transX = 0;
-                        transY = 0;
-                        choose_anchor = 0;
-                    }
-                    if(ScaleX!=1.0 || ScaleY!=1.0){
-                        if(anchorX==-1){
-                            choose_anchor = 1;
-                        }
-                        else{
-                            PlObjects[selected-1].scale(anchorX, anchorY, ScaleX, ScaleY);
-                            choose_anchor = 0;
-                            ScaleX = 1;
-                            ScaleY = 1;
-                        }
-                    }
-                    if(Rotate!=0){
-                        if(anchorX==-1){
-                            choose_anchor = 1;
-                        }
-                        else{
-                            PlObjects[selected-1].rotate(anchorX, anchorY, Rotate);
-                            choose_anchor = 0;
-                            Rotate = 0;
-                        }
-                    }
-                    
-                }
-                else{
-                    choose_anchor = 2;
-                }
+                selectedPlObj.clearPoints();
             }
             ImGui::SameLine();
             if (ImGui::Button("Reset", ImVec2(100.0f, 30.0f))){
@@ -467,7 +436,56 @@ int main(int, char**)
                 anchorX = -1;
                 anchorY = -1;
                 choose_anchor = 0;
+                selectedPlObj.clearPoints();
             }
+
+            // Live transformations below
+            if(selected>0){
+                    // choose_anchor = 0;
+                    // if(transX!=0 || transY!=0){
+                    if(transX != prevTransX || transY != prevTransY){
+                        // PlObjects[selected-1].translate(transX, transY);
+                        transformSelectedPlObj(anchorX, anchorY);
+                        prevTransX = transX;
+                        prevTransY = transY;
+                        // transX = 0;
+                        // transY = 0;
+                        choose_anchor = 0;
+                    }
+                    // if(ScaleX!=1.0 || ScaleY!=1.0){
+                    if(ScaleX != prevScaleX || ScaleY != prevScaleY){
+                        if(anchorX==-1){
+                            choose_anchor = 1;
+                        }
+                        else{
+                            // PlObjects[selected-1].scale(anchorX, anchorY, ScaleX, ScaleY);
+                            transformSelectedPlObj(anchorX, anchorY);
+                            choose_anchor = 0;
+                            prevScaleX = ScaleX;
+                            prevScaleY = ScaleY;
+                            // ScaleX = 1;
+                            // ScaleY = 1;
+                        }
+                    }
+                    // if(Rotate!=0){
+                    if(Rotate != prevRotate){
+                        if(anchorX==-1){
+                            choose_anchor = 1;
+                        }
+                        else{
+                            // PlObjects[selected-1].rotate(anchorX, anchorY, Rotate);
+                            transformSelectedPlObj(anchorX, anchorY);
+                            choose_anchor = 0;
+                            prevRotate = Rotate;
+                            // Rotate = 0;
+                        }
+                    }
+                    
+                }
+                else{
+                    choose_anchor = 2;
+                }
+
 
             // cursor = ImGui::GetCursorPos();
             // ImGui::SetCursorPos(ImVec2(30.0f+cursor.x, 20.0f+cursor.y));

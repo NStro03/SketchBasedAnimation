@@ -39,9 +39,19 @@ public:
         //glm::mat4 trans = glm::mat4(1.0f);
     }
     
+    bool clearPoints(){
+        objectPoints.clear();
+        // while (!objectPoints.empty())
+        // {
+        //     objectPoints.pop_back();
+        // }
+        return objectPoints.empty();
+    }
+    
     ImVec2* getPoints(){
         return &objectPoints[0];
     }
+
     ImVec2 getPoint(int i){
         return objectPoints[i];
     }

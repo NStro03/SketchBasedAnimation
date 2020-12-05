@@ -31,12 +31,14 @@ int selected = 0, hovered = 0;
 
 static int ObjectCount = -1;
 static float transX = 0.0f, transY = 0.0f, ScaleX = 1.0f, ScaleY = 1.0f, Rotate = 0.0f;
+static float prevTransX = 0.0f, prevTransY = 0.0f, prevScaleX = 1.0f, prevScaleY = 1.0f, prevRotate = 0.0f;
 
 bool leftMouseDown = false, sampleLeftMouseDown = false;
 
 double prevX,prevY;
 
 std::vector<PlObject> PlObjects;
+PlObject selectedPlObj;
 
 std::vector<ImVec2> samplePoints;
 int sampleSize = 0,sampleSize1=0;
@@ -179,22 +181,6 @@ void oscillationUpdate()
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 PlObject Oscillate(ImGuiIO io)
 {
@@ -249,3 +235,23 @@ PlObject Oscillate(ImGuiIO io)
 */
 
 
+void transformSelectedPlObj(int anchorX, int anchorY){
+    if(transX != prevTransX || transY != prevTransY || ScaleX != prevScaleX || ScaleY != prevScaleY || Rotate != prevRotate){
+        int n = PlObjects[selected-1].getSize();
+        if(!selectedPlObj.clearPoints())
+            std::cout<<"Not able to clear object points.";
+        
+        for(int i=0; i<n; i++){
+            ImVec2 t;
+            t.x = PlObjects[selected-1].getPoint(i).x;
+            t.y = PlObjects[selected-1].getPoint(i).y;
+            selectedPlObj.addPoint(t);
+        }
+
+        selectedPlObj.translate(transX, transY);
+        selectedPlObj.scale(anchorX, anchorY, ScaleX, ScaleY);
+        selectedPlObj.rotate(anchorX, anchorY, Rotate);
+    }
+    
+    
+}
