@@ -296,8 +296,17 @@ int main(int, char**)
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, bA);
 
             ImGui::SameLine();
+
             if(ImGui::Button("Select", ImVec2(130.0f, 50.0f))){
                 choice = 2;
+                for(int j=0; j < PlObjects.size(); j++){
+                    for(int i=0; i < PlObjects[j].getSize(); i++){
+                        ImVec2 t;
+                        t.x = PlObjects[j].getPoint(i).x;
+                        t.y = PlObjects[j].getPoint(i).y;
+                        pixelObjectMap[(int)(t.x)][(int)(t.y)] = j+1;
+                    }
+                }
             }
 
             ImGui::PopStyleColor();

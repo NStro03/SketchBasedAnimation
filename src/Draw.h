@@ -35,7 +35,7 @@ void draw(GLFWwindow *canvas){
         if(x == prevX && y == prevY)
             return;
         PlObjects[ObjectCount].addPoint(s);
-        pixelObjectMap[(int)(x)][(int)(y)] = ObjectCount+1;
+        // pixelObjectMap[(int)(x)][(int)(y)] = ObjectCount+1;
     }
 }
 void setleftmouseDown(ImGuiIO io){
