@@ -41,6 +41,7 @@ public:
     
     bool clearPoints(){
         objectPoints.clear();
+        size = 0;
         // while (!objectPoints.empty())
         // {
         //     objectPoints.pop_back();

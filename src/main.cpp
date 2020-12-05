@@ -176,7 +176,7 @@ int main(int, char**)
                 }
                 else if(selected==i+1){
                     // draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), SelectCol32, false, 3.0f);
-                    transformSelectedPlObj(anchorX, anchorY);
+                    // transformSelectedPlObj(anchorX, anchorY);
                     draw_list->AddPolyline(selectedPlObj.getPoints(),selectedPlObj.getSize(), SelectCol32, false, 3.0f);
                 }
                 else if(hovered==i+1){
@@ -424,9 +424,28 @@ int main(int, char**)
             ImGui::SetCursorPos(ImVec2(40.0f+cursor.x, 5.0f+cursor.y));
 
             if (ImGui::Button("Transform", ImVec2(100.0f, 30.0f))){
-                selectedPlObj.clearPoints();
+                if(selected > 0){
+                    saveSelectedPlObj();
+                    selectedPlObj.clearPoints();
+                    selected = 0;
+                    prevTransX = -1.0f;
+                    prevTransY = -1.0f;
+                    prevScaleX = -1.0f;
+                    prevScaleY = -1.0f;
+                    prevRotate = -1.0f;
+                    Rotate = 0;
+                    ScaleX = 1;
+                    ScaleY = 1;
+                    transX = 0;
+                    transY = 0;
+                    anchorX = -1;
+                    anchorY = -1;
+                }
+                choose_anchor=2;
             }
+
             ImGui::SameLine();
+            
             if (ImGui::Button("Reset", ImVec2(100.0f, 30.0f))){
                 Rotate = 0;
                 ScaleX = 1;
@@ -441,7 +460,7 @@ int main(int, char**)
 
             // Live transformations below
             if(selected>0){
-                    // choose_anchor = 0;
+                    choose_anchor = 0;
                     // if(transX!=0 || transY!=0){
                     if(transX != prevTransX || transY != prevTransY){
                         // PlObjects[selected-1].translate(transX, transY);
