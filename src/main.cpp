@@ -121,6 +121,12 @@ int main(int, char**)
     const ImU32 LightYellow32 = ImColor(ImVec4(1.0f, 1.0f, 0.933, 1.00f));
     std::vector<EmittingTexture> emittingTextures;
     int Time = 0;
+
+    GLuint tex;
+
+    if (load_texture("./src/graph_background.png", &tex)){
+        std::cout << "texture loaded successfully !!!!" << std::endl;
+    }
     // Main loop
 
 
@@ -168,48 +174,59 @@ int main(int, char**)
             // printf("%s\n", leftMouseDown ? "true" : "false");
             ImDrawList* draw_list = ImGui::GetWindowDrawList();
             int i = 0;
-            for(i=0;i<PlObjects.size();i++){
-                // std::vector<ImVec2> points = PlObjects[ObjectCount].getPoints();
-                //printf("%d %d\n",i,Objects[i].size);
-                if(i+1==oscillationObjectid){
+            if(choice==3){
+                draw_list->AddImage((ImTextureID)tex,ImVec2(0,0),sheetsize);
+                for(i=0;i<PlObjects.size();i++){
+                    // std::vector<ImVec2> points = PlObjects[ObjectCount].getPoints();
+                    //printf("%d %d\n",i,Objects[i].size);
+                    draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), White32, false, 3.0f);
+                }
 
-                }
-                else if(selected==i+1){
-                    // draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), SelectCol32, false, 3.0f);
-                    // transformSelectedPlObj(anchorX, anchorY);
-                    draw_list->AddPolyline(selectedPlObj.getPoints(),selectedPlObj.getSize(), SelectCol32, false, 3.0f);
-                }
-                else if(hovered==i+1){
-                    draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), HoverCol32, false, 3.0f);
-                }
-                else{
-                    draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), MarkerCol32, false, 3.0f);
-                }
             }
+            else{
+                for(i=0;i<PlObjects.size();i++){
+                    // std::vector<ImVec2> points = PlObjects[ObjectCount].getPoints();
+                    //printf("%d %d\n",i,Objects[i].size);
+                    if(i+1==oscillationObjectid){
 
-            // if(osText == 1) add polyline ;
-            // Oscillatin  : Add polyline for copied object ?????????????????????????????????????
-            // change first two , keep rest same
-            if(osText == 1)
-            {
-                draw_list->AddPolyline(&oscillationObject[0], oscillationObject.size(), MarkerCol32, false, 3.0f);
-            }
-
-            for(i=0;i<eText;i++){
-                int l = emittingTextures[i].getObjectCount(),j=0;
-
-                for(j=0;j<l;j++){
-                    ImVec2 mid = emittingTextures[i].getPathPoint(j);
-                    if(sampleSize>0){
-                        // printf("%d %d %d\n", sampleSize,l, sampleEmitPoints.size());
-                        // if(j==0){
-                        //     for(int p=0;p<sampleSize;p++);
-                        // }
-                        std::vector<ImVec2> sampleEmitPoints = translate(mid.x, mid.y);
-                        draw_list->AddPolyline(&sampleEmitPoints[0], sampleEmitPoints.size(), MarkerCol32, false, 3.0f);
+                    }
+                    else if(selected==i+1){
+                        // draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), SelectCol32, false, 3.0f);
+                        // transformSelectedPlObj(anchorX, anchorY);
+                        draw_list->AddPolyline(selectedPlObj.getPoints(),selectedPlObj.getSize(), SelectCol32, false, 3.0f);
+                    }
+                    else if(hovered==i+1){
+                        draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), HoverCol32, false, 3.0f);
                     }
                     else{
-                        draw_list->AddRectFilled(ImVec2(mid.x-7,mid.y-7),ImVec2(mid.x+7,mid.y+7),MarkerCol32);
+                        draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), MarkerCol32, false, 3.0f);
+                    }
+                }
+
+                // if(osText == 1) add polyline ;
+                // Oscillatin  : Add polyline for copied object ?????????????????????????????????????
+                // change first two , keep rest same
+                if(osText == 1)
+                {
+                    draw_list->AddPolyline(&oscillationObject[0], oscillationObject.size(), MarkerCol32, false, 3.0f);
+                }
+
+                for(i=0;i<eText;i++){
+                    int l = emittingTextures[i].getObjectCount(),j=0;
+
+                    for(j=0;j<l;j++){
+                        ImVec2 mid = emittingTextures[i].getPathPoint(j);
+                        if(sampleSize>0){
+                            // printf("%d %d %d\n", sampleSize,l, sampleEmitPoints.size());
+                            // if(j==0){
+                            //     for(int p=0;p<sampleSize;p++);
+                            // }
+                            std::vector<ImVec2> sampleEmitPoints = translate(mid.x, mid.y);
+                            draw_list->AddPolyline(&sampleEmitPoints[0], sampleEmitPoints.size(), MarkerCol32, false, 3.0f);
+                        }
+                        else{
+                            draw_list->AddRectFilled(ImVec2(mid.x-7,mid.y-7),ImVec2(mid.x+7,mid.y+7),MarkerCol32);
+                        }
                     }
                 }
             }
@@ -259,24 +276,30 @@ int main(int, char**)
             a = ImVec4(0.0f, 0.549f, 0.729f, 0.7f);
             aH = ImVec4(0.0f, 0.549f, 0.729f, 0.5f);
             aA = ImVec4(0.0f, 0.549f, 0.729f, 1.00f);
-            b = ImVec4(0.0f, 0.549f, 0.729f, 0.7f);
-            bH = ImVec4(0.0f, 0.549f, 0.729f, 0.5f);
-            bA = ImVec4(0.0f, 0.549f, 0.729f, 1.00f);
+            b = ImVec4(0.298f, 0.686f, 0.314f, 0.7f);
+            bH = ImVec4(0.298f, 0.686f, 0.314f, 0.5f);
+            bA = ImVec4(0.298f, 0.686f, 0.314f, 1.00f);
+            // if(choice==1){
+            //     a = ImVec4(0.298f, 0.686f, 0.314f, 0.7f);
+            //     aH = ImVec4(0.298f, 0.686f, 0.314f, 0.5f);
+            //     aA = ImVec4(0.298f, 0.686f, 0.314f, 1.00f);
+            // }
+            // else{
+                
+            //     b = ImVec4(0.298f, 0.686f, 0.314f, 0.7f);
+            //     bH = ImVec4(0.298f, 0.686f, 0.314f, 0.5f);
+            //     bA = ImVec4(0.298f, 0.686f, 0.314f, 1.00f);
+            // }
             if(choice==1){
-                a = ImVec4(0.298f, 0.686f, 0.314f, 0.7f);
-                aH = ImVec4(0.298f, 0.686f, 0.314f, 0.5f);
-                aA = ImVec4(0.298f, 0.686f, 0.314f, 1.00f);
+                ImGui::PushStyleColor(ImGuiCol_Button, b);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, bH);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, bA);
             }
             else{
-                
-                b = ImVec4(0.298f, 0.686f, 0.314f, 0.7f);
-                bH = ImVec4(0.298f, 0.686f, 0.314f, 0.5f);
-                bA = ImVec4(0.298f, 0.686f, 0.314f, 1.00f);
+                ImGui::PushStyleColor(ImGuiCol_Button, a);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, aH);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, aA);
             }
-
-            ImGui::PushStyleColor(ImGuiCol_Button, a);
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, aH);
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, aA);
 
             ImVec2 cursor = ImGui::GetCursorPos();
             ImGui::SetCursorPos(ImVec2(20+cursor.x, cursor.y));
@@ -291,9 +314,16 @@ int main(int, char**)
             ImGui::PopStyleColor();
             ImGui::PopStyleColor();
 
-            ImGui::PushStyleColor(ImGuiCol_Button, b);
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, bH);
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, bA);
+            if(choice==2){
+                ImGui::PushStyleColor(ImGuiCol_Button, b);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, bH);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, bA);
+            }
+            else{
+                ImGui::PushStyleColor(ImGuiCol_Button, a);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, aH);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, aA);
+            }
 
             ImGui::SameLine();
 
@@ -360,6 +390,16 @@ int main(int, char**)
             else{
                 selectCurve(io);
             }
+            if(choice==3){
+                ImGui::PushStyleColor(ImGuiCol_Button, b);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, bH);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, bA);
+            }
+            else{
+                ImGui::PushStyleColor(ImGuiCol_Button, a);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, aH);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, aA);
+            }
 
             draw_list-> AddLine(ImVec2(970.0f, 85.0f), ImVec2(1270.0f, 85.0f), White32);
 
@@ -368,10 +408,28 @@ int main(int, char**)
             if(ImGui::Button("Graph Mode", ImVec2(130.0f, 50.0f))){
                 choice = 3;
             }
+            ImGui::PopStyleColor();
+            ImGui::PopStyleColor();
+            ImGui::PopStyleColor();
+
+            if(choice==4){
+                ImGui::PushStyleColor(ImGuiCol_Button, b);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, bH);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, bA);
+            }
+            else{
+                ImGui::PushStyleColor(ImGuiCol_Button, a);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, aH);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, aA);
+            }
             ImGui::SameLine();
             if(ImGui::Button("Present", ImVec2(130.0f, 50.0f))){
                 choice = 4;
             }
+
+            ImGui::PopStyleColor();
+            ImGui::PopStyleColor();
+            ImGui::PopStyleColor();
             //ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
             
@@ -389,6 +447,7 @@ int main(int, char**)
 
 
             draw_list-> AddLine(ImVec2(980.0f, 220.0f), ImVec2(1260.0f, 220.0f), White32);
+            if(choice!=3){
             cursor = ImGui::GetCursorPos();
             ImGui::SetCursorPos(ImVec2(20.0f+cursor.x, 20.0f+cursor.y));
 
@@ -407,6 +466,13 @@ int main(int, char**)
             ImGui::SetCursorPos(ImVec2(20.0f+cursor.x, 20.0f+cursor.y));
 
             ImGui::SliderFloat("Rotate", &Rotate, -3.14f, 3.14f);
+
+            }
+            else{
+                cursor = ImGui::GetCursorPos();
+                ImGui::SetCursorPos(ImVec2(cursor.x, 109+cursor.y));
+                draw_list->AddText(ImVec2(1010,250), White32, "Not Available for this feature");
+            }
 
 
             draw_list-> AddLine(ImVec2(980.0f, 330.0f), ImVec2(1260.0f, 330.0f), White32);
@@ -475,55 +541,57 @@ int main(int, char**)
 
             // Live transformations below
             if(selected>0){
+                choose_anchor = 0;
+                // if(transX!=0 || transY!=0){
+                if(transX != prevTransX || transY != prevTransY){
+                    // PlObjects[selected-1].translate(transX, transY);
+                    transformSelectedPlObj(anchorX, anchorY);
+                    prevTransX = transX;
+                    prevTransY = transY;
+                    // transX = 0;
+                    // transY = 0;
                     choose_anchor = 0;
-                    // if(transX!=0 || transY!=0){
-                    if(transX != prevTransX || transY != prevTransY){
-                        // PlObjects[selected-1].translate(transX, transY);
+                }
+                // if(ScaleX!=1.0 || ScaleY!=1.0){
+                if(ScaleX != prevScaleX || ScaleY != prevScaleY){
+                    if(anchorX==-1){
+                        choose_anchor = 1;
+                    }
+                    else{
+                        // PlObjects[selected-1].scale(anchorX, anchorY, ScaleX, ScaleY);
                         transformSelectedPlObj(anchorX, anchorY);
-                        prevTransX = transX;
-                        prevTransY = transY;
-                        // transX = 0;
-                        // transY = 0;
                         choose_anchor = 0;
+                        prevScaleX = ScaleX;
+                        prevScaleY = ScaleY;
+                        // ScaleX = 1;
+                        // ScaleY = 1;
                     }
-                    // if(ScaleX!=1.0 || ScaleY!=1.0){
-                    if(ScaleX != prevScaleX || ScaleY != prevScaleY){
-                        if(anchorX==-1){
-                            choose_anchor = 1;
-                        }
-                        else{
-                            // PlObjects[selected-1].scale(anchorX, anchorY, ScaleX, ScaleY);
-                            transformSelectedPlObj(anchorX, anchorY);
-                            choose_anchor = 0;
-                            prevScaleX = ScaleX;
-                            prevScaleY = ScaleY;
-                            // ScaleX = 1;
-                            // ScaleY = 1;
-                        }
-                    }
-                    // if(Rotate!=0){
-                    if(Rotate != prevRotate){
-                        if(anchorX==-1){
-                            choose_anchor = 1;
-                        }
-                        else{
-                            // PlObjects[selected-1].rotate(anchorX, anchorY, Rotate);
-                            transformSelectedPlObj(anchorX, anchorY);
-                            choose_anchor = 0;
-                            prevRotate = Rotate;
-                            // Rotate = 0;
-                        }
-                    }
-                    
                 }
-                else{
-                    choose_anchor = 2;
+                // if(Rotate!=0){
+                if(Rotate != prevRotate){
+                    if(anchorX==-1){
+                        choose_anchor = 1;
+                    }
+                    else{
+                        // PlObjects[selected-1].rotate(anchorX, anchorY, Rotate);
+                        transformSelectedPlObj(anchorX, anchorY);
+                        choose_anchor = 0;
+                        prevRotate = Rotate;
+                        // Rotate = 0;
+                    }
                 }
+                
+            }
+            else{
+                choose_anchor = 2;
+            }
 
 
             // cursor = ImGui::GetCursorPos();
             // ImGui::SetCursorPos(ImVec2(30.0f+cursor.x, 20.0f+cursor.y));
             draw_list-> AddLine(ImVec2(965.0f, 405.0f), ImVec2(1275.0f, 405.0f), White32);
+
+            if(choice!=3){
 
             cursor = ImGui::GetCursorPos();
             ImGui::SetCursorPos(ImVec2(cursor.x, 20.0f+cursor.y));
@@ -594,6 +662,7 @@ int main(int, char**)
             draw_list->AddRectFilled(ImVec2(980,535),ImVec2(1260,775),LightYellow32);
 
             draw_list->AddPolyline(&samplePoints[0], sampleSize, MarkerCol32, false, 3.0f);
+            }
 
             // ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
             // ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
