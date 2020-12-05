@@ -258,13 +258,22 @@ void transformSelectedPlObj(int anchorX, int anchorY){
 
 void saveSelectedPlObj(){
     int n = selectedPlObj.getSize();
-        if(!PlObjects[selected-1].clearPoints())
-            std::cout<<"Not able to clear object points.";
-        
-        for(int i=0; i<n; i++){
-            ImVec2 t;
-            t.x = selectedPlObj.getPoint(i).x;
-            t.y = selectedPlObj.getPoint(i).y;
-            PlObjects[selected-1].addPoint(t);
+    for(int i=0; i<PlObjects[selected-1].getSize(); i++){
+        ImVec2 t = PlObjects[selected-1].getPoint(i);
+        if(pixelObjectMap[(int)(t.x)][(int)(t.y)] == selected){
+            pixelObjectMap[(int)(t.x)][(int)(t.y)] = 0;
         }
+        
+    }
+
+    if(!PlObjects[selected-1].clearPoints())
+        std::cout<<"Not able to clear object points.";
+    
+    for(int i=0; i<n; i++){
+        ImVec2 t;
+        t.x = selectedPlObj.getPoint(i).x;
+        t.y = selectedPlObj.getPoint(i).y;
+        PlObjects[selected-1].addPoint(t);
+        pixelObjectMap[(int)(t.x)][(int)(t.y)] = selected;
+    }
 }
