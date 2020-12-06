@@ -90,6 +90,11 @@ static void selectCurve(ImGuiIO io)
                     Rotate = 0;
                 }
             	selected = objid;
+                prevTransX = -1.0f;
+                prevTransY = -1.0f;
+                prevScaleX = -1.0f;
+                prevScaleY = -1.0f;
+                prevRotate = -1.0f;
         	}
     	}
     }
