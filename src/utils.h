@@ -1,5 +1,5 @@
-#include "PlObject.h"
-
+// #include "PlObject.h"
+#include "Timeline.h"
 // About Desktop OpenGL function loaders:
 //  Modern desktop OpenGL doesn't have a standard portable header file to load OpenGL function pointers.
 //  Helper libraries are often used for this purpose! Here we are supporting a few common ones (gl3w, glew, glad).
@@ -60,6 +60,8 @@ int counter = 0;
 int choose_final = 0;
 int oscillationObjectid=0;
 
+// TimeLine Object
+Timeline TL;
 
 static int getObjectid(int x, int y){
 	int i = x-1, s=0,j=y-1;
