@@ -466,6 +466,11 @@ int main(int, char**)
                         pixelObjectMap[(int)(t.x)][(int)(t.y)] = j+1;
                     }
                 }
+
+                directions.clear();
+                if(TL.setFrameDirections()){
+                    directions = TL.getFrameDirections();
+                }
             }
 
             ImGui::PopStyleColor();
@@ -562,13 +567,14 @@ int main(int, char**)
                 draw_list-> AddLine(ImVec2(965.0f, 405.0f), ImVec2(1275.0f, 405.0f), White32);
             }
             else if(choice==4){
-                if(!TL.setFrameDirections()){
+                if(directions.size()==0){
                     cursor = ImGui::GetCursorPos();
                     ImGui::SetCursorPos(ImVec2(55.0f+cursor.x, 20.0f+cursor.y));
                     ImGui::Text("Add Animation using Graph Mode");
                 }
                 else{
-                    selectPresentationCurve(io);
+                    selectPresentationCurve();
+                    UpdatePresentation(io.MousePos.x,io.MousePos.y);
                 }
             }
             else{

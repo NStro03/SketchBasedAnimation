@@ -64,6 +64,8 @@ int oscillationObjectid=0;
 
 std::vector<PlObject> PresentPlObjects;
 
+std::vector<ImVec2> directions;
+
 
 // TimeLine Object
 Timeline TL;
@@ -144,33 +146,37 @@ static void selectCurveOnTime(ImGuiIO io, int Time){
         }
     }
 }
-void selectPresentationCurve(ImGuiIO io){
+void UpdatePresentation(float x, float y){
+    if(!ImGui::GetIO().MouseDown[0]){
+        startX = -1;
+        startY = -1;
+        return;
+    }
+    if(startX>0 && startY>0){
+        float meg = (directions[selected-1].x*directions[selected-1].x)+(directions[selected-1].y*directions[selected-1].y);
+        float state = ((directions[selected-1].x*(x - startX)) + (directions[selected-1].y*(y - startY)))/meg;
+        //std::cout<<directions[selected-1].x<<" "<<directions[selected-1].y<<" "<<x<<" "<<y<<"\n";
+        if(state>=0 && state<=1)
+            PresentPlObjects=TL.getAtTimeFrame(state);
+    }
+}
+void selectPresentationCurve(){
     int x,y;
-    x = (int)(io.MousePos.x);
-    y = (int)(io.MousePos.y);
+    ImVec2 v = ImGui::GetMousePos();
+    x = (int)(v.x);
+    y = (int)(v.y);
     if(ImGui::GetIO().MouseClicked[0]){
         if(x>0 && x<960 && y>0 && y<720){
             // printf("%d %d\n", x, y);
             int objid = getObjectid(x,y);
             if(objid!=0){
-                if(selected!=objid){
-                    transX = 0;
-                    transY = 0;
-                    ScaleX = 1;
-                    ScaleY = 1;
-                    Rotate = 0;
-                }
                 selected = objid;
-                PresentPlObjects=TL.getAtTimeFrame(0);
-                prevTransX = -1.0f;
-                prevTransY = -1.0f;
-                prevScaleX = -1.0f;
-                prevScaleY = -1.0f;
-                prevRotate = -1.0f;
+                startX=x;
+                startY=y;
+                //std::cout<<startX<<" "<<startY<<"\n";
             }
         }
     }
-    else{}
     hovered = 0;
     if(x>0 && x<960 && y>0 && y<720){
         int objid = getObjectid(x,y);

@@ -113,8 +113,8 @@ public:
         int n = directions.size();
         float x, y;
         for(int i=0;i<n;i++){
-            x = directions[i].x;
-            y = directions[i].y;
+            x = directions[i].x*pos;
+            y = directions[i].y*pos;
             // std::cout<<i<<" "<<x<<" "<<y<<"\n";
             PlObjs[i].translatePixel(x,y);
         }
