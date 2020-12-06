@@ -9,6 +9,7 @@ private:
     std::vector<PlObject> timeFrames[11];
     bool isTfFilled[11];
     int pixelObjectMap[11][961][721];
+    std::vector<ImVec2> directions;
 
 public:
     Timeline(){
@@ -87,6 +88,37 @@ public:
             pixelObjectMap[Time][(int)(t.x)][(int)(t.y)] = selected;
         }
         timeFrames[Time] = PlObjects;
+    }
+    bool setFrameDirections(){
+        if(timeFrames[10].size()==0 || timeFrames[0].size()==0){
+            return false;
+        }
+        directions.clear();
+        int n = timeFrames[10].size();
+        for(int i=0;i<n;i++){
+            ImVec2 e = timeFrames[10][i].getPoint(0);
+            ImVec2 s = timeFrames[0][i].getPoint(0);
+            float x = e.x - s.x;
+            float y = e.y - s.y;
+            directions.push_back(ImVec2(x,y));
+        }
+        return true;
+    }
+    std::vector<ImVec2> getFrameDirections(){
+        return directions;
+    }
+    std::vector<PlObject> getAtTimeFrame(float pos){
+        std::vector<PlObject> PlObjs;
+        copy(timeFrames[0].begin(), timeFrames[0].end(), back_inserter(PlObjs));
+        int n = directions.size();
+        float x, y;
+        for(int i=0;i<n;i++){
+            x = directions[i].x;
+            y = directions[i].y;
+            // std::cout<<i<<" "<<x<<" "<<y<<"\n";
+            PlObjs[i].translatePixel(x,y);
+        }
+        return PlObjs;
     }
 };
 

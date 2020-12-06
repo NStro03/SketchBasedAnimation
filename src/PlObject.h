@@ -63,8 +63,32 @@ public:
 
     void translate(float x, float y)
     {
-        x = x * 480;
-        y = y * 360; 
+        x = x * 960;
+        y = y * 720; 
+
+
+        //glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+        glm::mat4 trans = glm::mat4(1.0f);
+        trans = glm::translate(trans, glm::vec3(x, y, 0.0f));
+       // vec = trans * vec;
+        //std::cout << vec.x  << " " << vec.y  << " " << vec.z << std::endl;
+
+        // translate Every point of our object
+        for(int i=0;i<size;i++)
+        {
+            float x0 = objectPoints[i].x;
+            float y0 = objectPoints[i].y;
+           // glm::vec4 vec(x0, y0, 0.0f);
+
+            glm::vec4 vec(x0, y0, 0.0f,1.0f);
+
+            vec = trans * vec;
+            objectPoints[i].x = vec.x;
+            objectPoints[i].y = vec.y;
+        }
+    }
+    void translatePixel(float x, float y)
+    {
 
 
         //glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);

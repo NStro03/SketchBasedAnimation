@@ -194,6 +194,49 @@ int main(int, char**)
                 }
 
             }
+            else if(choice==4){
+                // std::cout<<PresentPlObjects.size()<<"\n";
+                for(i=0;i<PresentPlObjects.size();i++){
+                    // std::vector<ImVec2> points = PlObjects[ObjectCount].getPoints();
+                    //printf("%d %d\n",i,Objects[i].size);
+                    if(i+1==oscillationObjectid){
+
+                    }
+                    else if(selected==i+1 || hovered==i+1){
+                        draw_list->AddPolyline(PresentPlObjects[i].getPoints(),PresentPlObjects[i].getSize(), HoverCol32, false, 3.0f);
+                    }
+                    else{
+                        draw_list->AddPolyline(PresentPlObjects[i].getPoints(),PresentPlObjects[i].getSize(), MarkerCol32, false, 3.0f);
+                    }
+                }
+
+                // if(osText == 1) add polyline ;
+                // Oscillatin  : Add polyline for copied object ?????????????????????????????????????
+                // change first two , keep rest same
+                if(osText == 1)
+                {
+                    draw_list->AddPolyline(&oscillationObject[0], oscillationObject.size(), MarkerCol32, false, 3.0f);
+                }
+
+                for(i=0;i<eText;i++){
+                    int l = emittingTextures[i].getObjectCount(),j=0;
+
+                    for(j=0;j<l;j++){
+                        ImVec2 mid = emittingTextures[i].getPathPoint(j);
+                        if(sampleSize>0){
+                            // printf("%d %d %d\n", sampleSize,l, sampleEmitPoints.size());
+                            // if(j==0){
+                            //     for(int p=0;p<sampleSize;p++);
+                            // }
+                            std::vector<ImVec2> sampleEmitPoints = translate(mid.x, mid.y);
+                            draw_list->AddPolyline(&sampleEmitPoints[0], sampleEmitPoints.size(), MarkerCol32, false, 3.0f);
+                        }
+                        else{
+                            draw_list->AddRectFilled(ImVec2(mid.x-7,mid.y-7),ImVec2(mid.x+7,mid.y+7),MarkerCol32);
+                        }
+                    }
+                }
+            }
             else{
                 for(i=0;i<PlObjects.size();i++){
                     // std::vector<ImVec2> points = PlObjects[ObjectCount].getPoints();
@@ -403,12 +446,34 @@ int main(int, char**)
             ImGui::SameLine();
             if(ImGui::Button("Present", ImVec2(130.0f, 50.0f))){
                 choice = 4;
+                selected = 0;
+                std::vector<PlObject> TempPlObjects = TL.getTimeFrame(0);
+                PresentPlObjects.clear();
+                copy(TempPlObjects.begin(), TempPlObjects.end(), back_inserter(PresentPlObjects));
+                for(int j=0; j < PlObjects.size(); j++){
+                    for(int i=0; i < PlObjects[j].getSize(); i++){
+                        ImVec2 t;
+                        t.x = PlObjects[j].getPoint(i).x;
+                        t.y = PlObjects[j].getPoint(i).y;
+                        pixelObjectMap[(int)(t.x)][(int)(t.y)] = 0;
+                    }
+                }
+                for(int j=0; j < PresentPlObjects.size(); j++){
+                    for(int i=0; i < PresentPlObjects[j].getSize(); i++){
+                        ImVec2 t;
+                        t.x = PresentPlObjects[j].getPoint(i).x;
+                        t.y = PresentPlObjects[j].getPoint(i).y;
+                        pixelObjectMap[(int)(t.x)][(int)(t.y)] = j+1;
+                    }
+                }
             }
 
             ImGui::PopStyleColor();
             ImGui::PopStyleColor();
             ImGui::PopStyleColor();
             //ImGui::Dummy(ImVec2(0.0f, 20.0f));
+
+            draw_list-> AddLine(ImVec2(965.0f, 155.0f), ImVec2(1275.0f, 155.0f), White32);
 
             if(choice==3){
                 // std::cout<<"Before"<<"\n";
@@ -431,7 +496,6 @@ int main(int, char**)
                 else{
                     choose_anchor = 2;
                 }
-                draw_list-> AddLine(ImVec2(965.0f, 155.0f), ImVec2(1275.0f, 155.0f), White32);
 
                 cursor = ImGui::GetCursorPos();
                 ImGui::SetCursorPos(ImVec2(10.0f+cursor.x, 20.0f+cursor.y));
@@ -497,6 +561,16 @@ int main(int, char**)
                 }
                 draw_list-> AddLine(ImVec2(965.0f, 405.0f), ImVec2(1275.0f, 405.0f), White32);
             }
+            else if(choice==4){
+                if(!TL.setFrameDirections()){
+                    cursor = ImGui::GetCursorPos();
+                    ImGui::SetCursorPos(ImVec2(55.0f+cursor.x, 20.0f+cursor.y));
+                    ImGui::Text("Add Animation using Graph Mode");
+                }
+                else{
+                    selectPresentationCurve(io);
+                }
+            }
             else{
 
 
@@ -547,7 +621,6 @@ int main(int, char**)
                 }
 
                 
-                draw_list-> AddLine(ImVec2(965.0f, 155.0f), ImVec2(1275.0f, 155.0f), White32);
 
                 cursor = ImGui::GetCursorPos();
                 ImGui::SetCursorPos(ImVec2(10.0f+cursor.x, 20.0f+cursor.y));

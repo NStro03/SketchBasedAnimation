@@ -48,6 +48,8 @@ std::vector<ImVec2> samplePoints;
 int sampleSize = 0,sampleSize1=0;
 int sampleY = 720;
 long sampleX=0;
+float timeframe;
+int startX=-1, startY=-1;
 
 int eText = 0;
 
@@ -59,6 +61,9 @@ std::vector<ImVec2> oscillationObject;
 int counter = 0;
 int choose_final = 0;
 int oscillationObjectid=0;
+
+std::vector<PlObject> PresentPlObjects;
+
 
 // TimeLine Object
 Timeline TL;
@@ -134,6 +139,41 @@ static void selectCurveOnTime(ImGuiIO io, int Time){
     hovered = 0;
     if(x>0 && x<960 && y>0 && y<720){
         int objid = TL.getObjectidonTime(x,y,Time);
+        if(objid!=0){
+            hovered = objid;
+        }
+    }
+}
+void selectPresentationCurve(ImGuiIO io){
+    int x,y;
+    x = (int)(io.MousePos.x);
+    y = (int)(io.MousePos.y);
+    if(ImGui::GetIO().MouseClicked[0]){
+        if(x>0 && x<960 && y>0 && y<720){
+            // printf("%d %d\n", x, y);
+            int objid = getObjectid(x,y);
+            if(objid!=0){
+                if(selected!=objid){
+                    transX = 0;
+                    transY = 0;
+                    ScaleX = 1;
+                    ScaleY = 1;
+                    Rotate = 0;
+                }
+                selected = objid;
+                PresentPlObjects=TL.getAtTimeFrame(0);
+                prevTransX = -1.0f;
+                prevTransY = -1.0f;
+                prevScaleX = -1.0f;
+                prevScaleY = -1.0f;
+                prevRotate = -1.0f;
+            }
+        }
+    }
+    else{}
+    hovered = 0;
+    if(x>0 && x<960 && y>0 && y<720){
+        int objid = getObjectid(x,y);
         if(objid!=0){
             hovered = objid;
         }
