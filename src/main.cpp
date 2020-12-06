@@ -523,11 +523,6 @@ int main(int, char**)
                     saveSelectedPlObj();
                     selectedPlObj.clearPoints();
                     selected = 0;
-                    prevTransX = -1.0f;
-                    prevTransY = -1.0f;
-                    prevScaleX = -1.0f;
-                    prevScaleY = -1.0f;
-                    prevRotate = -1.0f;
                     Rotate = 0;
                     ScaleX = 1;
                     ScaleY = 1;
@@ -549,11 +544,6 @@ int main(int, char**)
                 transY = 0;
                 anchorX = -1;
                 anchorY = -1;
-                prevTransX = -1.0f;
-                prevTransY = -1.0f;
-                prevScaleX = -1.0f;
-                prevScaleY = -1.0f;
-                prevRotate = -1.0f;
                 selected = 0;
                 choose_anchor = 0;
                 selectedPlObj.clearPoints();
