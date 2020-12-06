@@ -179,7 +179,17 @@ int main(int, char**)
                 for(i=0;i<PlObjects.size();i++){
                     // std::vector<ImVec2> points = PlObjects[ObjectCount].getPoints();
                     //printf("%d %d\n",i,Objects[i].size);
-                    draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), White32, false, 3.0f);
+                    if(selected==i+1){
+                        // draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), SelectCol32, false, 3.0f);
+                        // transformSelectedPlObj(anchorX, anchorY);
+                        draw_list->AddPolyline(selectedPlObj.getPoints(),selectedPlObj.getSize(), SelectCol32, false, 3.0f);
+                    }
+                    else if(hovered==i+1){
+                        draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), HoverCol32, false, 3.0f);
+                    }
+                    else{
+                        draw_list->AddPolyline(PlObjects[i].getPoints(),PlObjects[i].getSize(), White32, false, 3.0f);
+                    }
                 }
 
             }
@@ -346,6 +356,56 @@ int main(int, char**)
             // if condition for flag , Capture final mouse X coordinate ?????????????????????????????????????
             // elseif niche wali  
             // global variable : osText = 1;
+            if(choice==3){
+                ImGui::PushStyleColor(ImGuiCol_Button, b);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, bH);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, bA);
+            }
+            else{
+                ImGui::PushStyleColor(ImGuiCol_Button, a);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, aH);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, aA);
+            }
+
+            draw_list-> AddLine(ImVec2(970.0f, 85.0f), ImVec2(1270.0f, 85.0f), White32);
+
+            cursor = ImGui::GetCursorPos();
+            ImGui::SetCursorPos(ImVec2(20+cursor.x, 10+cursor.y));
+            if(ImGui::Button("Graph Mode", ImVec2(130.0f, 50.0f))){
+                choice = 3;
+                for(int j=0; j < PlObjects.size(); j++){
+                    for(int i=0; i < PlObjects[j].getSize(); i++){
+                        ImVec2 t;
+                        t.x = PlObjects[j].getPoint(i).x;
+                        t.y = PlObjects[j].getPoint(i).y;
+                        pixelObjectMap[(int)(t.x)][(int)(t.y)] = j+1;
+                    }
+                }
+            }
+            ImGui::PopStyleColor();
+            ImGui::PopStyleColor();
+            ImGui::PopStyleColor();
+
+            if(choice==4){
+                ImGui::PushStyleColor(ImGuiCol_Button, b);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, bH);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, bA);
+            }
+            else{
+                ImGui::PushStyleColor(ImGuiCol_Button, a);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, aH);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, aA);
+            }
+            ImGui::SameLine();
+            if(ImGui::Button("Present", ImVec2(130.0f, 50.0f))){
+                choice = 4;
+            }
+
+            ImGui::PopStyleColor();
+            ImGui::PopStyleColor();
+            ImGui::PopStyleColor();
+            //ImGui::Dummy(ImVec2(0.0f, 20.0f));
+
             if(choose_final == 1)
             {
                 if(ImGui::GetIO().MouseClicked[0])
@@ -388,49 +448,9 @@ int main(int, char**)
                 draw(window);
             }
             else{
+                //std::cout<<"select"<<"\n";
                 selectCurve(io);
             }
-            if(choice==3){
-                ImGui::PushStyleColor(ImGuiCol_Button, b);
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, bH);
-                ImGui::PushStyleColor(ImGuiCol_ButtonActive, bA);
-            }
-            else{
-                ImGui::PushStyleColor(ImGuiCol_Button, a);
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, aH);
-                ImGui::PushStyleColor(ImGuiCol_ButtonActive, aA);
-            }
-
-            draw_list-> AddLine(ImVec2(970.0f, 85.0f), ImVec2(1270.0f, 85.0f), White32);
-
-            cursor = ImGui::GetCursorPos();
-            ImGui::SetCursorPos(ImVec2(20+cursor.x, 10+cursor.y));
-            if(ImGui::Button("Graph Mode", ImVec2(130.0f, 50.0f))){
-                choice = 3;
-            }
-            ImGui::PopStyleColor();
-            ImGui::PopStyleColor();
-            ImGui::PopStyleColor();
-
-            if(choice==4){
-                ImGui::PushStyleColor(ImGuiCol_Button, b);
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, bH);
-                ImGui::PushStyleColor(ImGuiCol_ButtonActive, bA);
-            }
-            else{
-                ImGui::PushStyleColor(ImGuiCol_Button, a);
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, aH);
-                ImGui::PushStyleColor(ImGuiCol_ButtonActive, aA);
-            }
-            ImGui::SameLine();
-            if(ImGui::Button("Present", ImVec2(130.0f, 50.0f))){
-                choice = 4;
-            }
-
-            ImGui::PopStyleColor();
-            ImGui::PopStyleColor();
-            ImGui::PopStyleColor();
-            //ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
             
             draw_list-> AddLine(ImVec2(965.0f, 155.0f), ImVec2(1275.0f, 155.0f), White32);

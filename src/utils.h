@@ -73,20 +73,24 @@ static int getObjectid(int x, int y){
 static void selectCurve(ImGuiIO io)
 {
     int x,y;
+    x = (int)(io.MousePos.x);
+    y = (int)(io.MousePos.y);
     if(ImGui::GetIO().MouseClicked[0]){
-        ImVec2 distFromClick(io.MouseClickedPos[0]);
-        x = (int)(distFromClick.x);
-        y = (int)(distFromClick.y);
         if(x>0 && x<960 && y>0 && y<720){
         	// printf("%d %d\n", x, y);
         	int objid = getObjectid(x,y);
         	if(objid!=0){
+                if(selected!=objid){
+                    transX = 0;
+                    transY = 0;
+                    ScaleX = 1;
+                    ScaleY = 1;
+                    Rotate = 0;
+                }
             	selected = objid;
         	}
     	}
     }
-    x = (int)(io.MousePos.x);
-    y = (int)(io.MousePos.y);
     hovered = 0;
     if(x>0 && x<960 && y>0 && y<720){
     	int objid = getObjectid(x,y);
