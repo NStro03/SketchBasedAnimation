@@ -64,9 +64,9 @@ int oscillationObjectid=0;
 Timeline TL;
 
 static int getObjectid(int x, int y){
-	int i = x-1, s=0,j=y-1;
-	for(;i<=x+1;i++){
-		for(;j<=y+1;j++)
+	int i = x-2, s=0,j=y-2;
+	for(;i<=x+2;i++){
+		for(;j<=y+2;j++)
 			if(pixelObjectMap[i][j]>s)
 				s=pixelObjectMap[i][j];
 	}
@@ -105,6 +105,39 @@ static void selectCurve(ImGuiIO io)
         	hovered = objid;
     	}
 	}
+}
+static void selectCurveOnTime(ImGuiIO io, int Time){
+    int x,y;
+    x = (int)(io.MousePos.x);
+    y = (int)(io.MousePos.y);
+    if(ImGui::GetIO().MouseClicked[0]){
+        if(x>0 && x<960 && y>0 && y<720){
+            // printf("%d %d\n", x, y);
+            int objid = TL.getObjectidonTime(x,y,Time);
+            if(objid!=0){
+                if(selected!=objid){
+                    transX = 0;
+                    transY = 0;
+                    ScaleX = 1;
+                    ScaleY = 1;
+                    Rotate = 0;
+                }
+                selected = objid;
+                prevTransX = -1.0f;
+                prevTransY = -1.0f;
+                prevScaleX = -1.0f;
+                prevScaleY = -1.0f;
+                prevRotate = -1.0f;
+            }
+        }
+    }
+    hovered = 0;
+    if(x>0 && x<960 && y>0 && y<720){
+        int objid = TL.getObjectidonTime(x,y,Time);
+        if(objid!=0){
+            hovered = objid;
+        }
+    }
 }
 std::vector<ImVec2> translate(float x, float y)
 {
@@ -270,6 +303,25 @@ void transformSelectedPlObj(int anchorX, int anchorY){
     
     
 }
+void transformSelectedOnTime(int Time){
+    // if(transX != prevTransX || transY != prevTransY || ScaleX != prevScaleX || ScaleY != prevScaleY || Rotate != prevRotate){
+        std::vector<PlObject> PlObs = TL.getTimeFrame(Time);
+        int n = PlObs[selected-1].getSize();
+        if(!selectedPlObj.clearPoints())
+            std::cout<<"Not able to clear object points.";
+        
+        for(int i=0; i<n; i++){
+            ImVec2 t;
+            t.x = PlObs[selected-1].getPoint(i).x;
+            t.y = PlObs[selected-1].getPoint(i).y;
+            selectedPlObj.addPoint(t);
+        }
+
+        selectedPlObj.translate(transX, transY);
+    // }
+    
+    
+}
 
 void saveSelectedPlObj(){
     int n = selectedPlObj.getSize();
@@ -303,8 +355,8 @@ bool load_texture( const char *file_name, GLuint *tex ) {
     }
     // NPOT check
     if ( ( x & ( x - 1 ) ) != 0 || ( y & ( y - 1 ) ) != 0 ) {
-        fprintf( stderr, "WARNING: texture %s is not power-of-2 dimensions\n",
-                         file_name );
+        // fprintf( stderr, "WARNING: texture %s is not power-of-2 dimensions\n",
+        //                  file_name );
     }
     int width_in_bytes = x * 4;
     unsigned char *top = NULL;
