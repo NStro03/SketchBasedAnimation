@@ -48,7 +48,7 @@ public:
     int getObjectidonTime(int x, int y,int Time){
         int i = x-2, s=0,j=y-2;
         for(;i<=x+2;i++){
-            for(;j<=y+2;j++)
+            for(j=y-2;j<=y+2;j++)
                 if(pixelObjectMap[Time][i][j]>s)
                     s=pixelObjectMap[Time][i][j];
         }
