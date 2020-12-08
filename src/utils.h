@@ -154,10 +154,12 @@ void UpdatePresentation(float x, float y){
     }
     if(startX>0 && startY>0){
         float meg = (directions[selected-1].x*directions[selected-1].x)+(directions[selected-1].y*directions[selected-1].y);
-        float state = ((directions[selected-1].x*(x - startX)) + (directions[selected-1].y*(y - startY)))/meg;
-        //std::cout<<directions[selected-1].x<<" "<<directions[selected-1].y<<" "<<x<<" "<<y<<"\n";
-        if(state>=0 && state<=1)
-            PresentPlObjects=TL.getAtTimeFrame(state);
+        if(meg!=0){
+            float state = ((directions[selected-1].x*(x - startX)) + (directions[selected-1].y*(y - startY)))/meg;
+            //std::cout<<directions[selected-1].x<<" "<<directions[selected-1].y<<" "<<x<<" "<<y<<"\n";
+            if(state>=0 && state<=1)
+                PresentPlObjects=TL.getAtTimeFrame(state);
+        }
     }
 }
 void selectPresentationCurve(){

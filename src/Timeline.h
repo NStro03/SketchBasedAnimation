@@ -116,7 +116,9 @@ public:
             x = directions[i].x*pos;
             y = directions[i].y*pos;
             // std::cout<<i<<" "<<x<<" "<<y<<"\n";
-            PlObjs[i].translatePixel(x,y);
+            if(x!=0 || y!=0){
+                PlObjs[i].translatePixel(x,y);
+            }
         }
         return PlObjs;
     }
