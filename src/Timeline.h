@@ -6,14 +6,14 @@
 class Timeline
 {
 private:
-    std::vector<PlObject> timeFrames[11];
-    bool isTfFilled[11];
-    int pixelObjectMap[11][961][721];
+    std::vector<PlObject> timeFrames[2];
+    bool isTfFilled[2];
+    int pixelObjectMap[2][961][721];
     std::vector<ImVec2> directions;
 
 public:
     Timeline(){
-        for (int i = 0; i < 11; i++){
+        for (int i = 0; i < 2; i++){
             isTfFilled[i] = false;
         }
     }
@@ -22,7 +22,7 @@ public:
     }
 
     void AddTimeFrame(int pos, std::vector<PlObject> PlObjs){
-        if(pos>=11 || pos<0){
+        if(pos>=2 || pos<0){
             std::cout<<"Invalid position to add time frame.\n";
             return;
         }
@@ -90,13 +90,13 @@ public:
         timeFrames[Time] = PlObjects;
     }
     bool setFrameDirections(){
-        if(timeFrames[10].size()==0 || timeFrames[0].size()==0){
+        if(timeFrames[1].size()==0 || timeFrames[0].size()==0){
             return false;
         }
         directions.clear();
-        int n = timeFrames[10].size();
+        int n = timeFrames[1].size();
         for(int i=0;i<n;i++){
-            ImVec2 e = timeFrames[10][i].getPoint(0);
+            ImVec2 e = timeFrames[1][i].getPoint(0);
             ImVec2 s = timeFrames[0][i].getPoint(0);
             float x = e.x - s.x;
             float y = e.y - s.y;

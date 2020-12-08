@@ -858,11 +858,15 @@ int main(int, char**)
             // ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.91f,0.96f,0.95f,1.0f));
             // ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.960f, 0.690f, 0.254f,1.0f));
             ImGui::Begin("Timer", NULL, 38);                          // Create a window called "Hello, world!" and append into it.
-            ImGui::PushItemWidth(940);
+            ImGui::PushItemWidth(740);
             ImGui::Dummy(ImVec2(0.0f, 1.0f));
             ImGui::SetWindowPos(ImVec2(0,720));
             ImGui::SetWindowSize(ImVec2(960,65));
-            ImGui::SliderInt("", &Time, 0,10);
+            ImGui::Text("Initial State");
+            ImGui::SameLine();
+            ImGui::SliderInt("", &Time, 0,1);
+            ImGui::SameLine();
+            ImGui::Text("Final State");
             ImGui::PopItemWidth();
             ImGui::End();
             // ImGui::PopStyleColor();
